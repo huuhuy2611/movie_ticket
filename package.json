@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@svgr/webpack": "^5.5.0",
     "antd": "^4.16.13",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "styled-components": "^5.3.1"
+    "sass": "^1.42.1",
+    "styled-components": "^5.3.1",
+    "url-loader": "^4.1.1"
   },
   "devDependencies": {
     "@types/react": "17.0.26",
