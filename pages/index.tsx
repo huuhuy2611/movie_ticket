@@ -1,6 +1,7 @@
-import { IconVercel } from "@/images";
-import Image from "next/image";
-import styles from "../styles/Home.module.scss";
+import React from 'react';
+import { IconVercel } from '@/images';
+import Image from 'next/image';
+import styles from '../styles/Home.module.scss';
 
 const Home = (): JSX.Element => {
   return (
@@ -8,8 +9,8 @@ const Home = (): JSX.Element => {
       abcd
       <br />
       <Image
-        src='/images/vercel.svg'
-        alt='Vercel Logo'
+        src="/images/vercel.svg"
+        alt="Vercel Logo"
         width={72}
         height={16}
       />

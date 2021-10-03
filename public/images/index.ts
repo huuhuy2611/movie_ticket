@@ -1,1 +1,1 @@
-export { ReactComponent as IconVercel } from "./vercel.svg";
+export { ReactComponent as IconVercel } from './vercel.svg';
