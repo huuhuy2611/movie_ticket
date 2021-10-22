@@ -1,8 +1,12 @@
 import React from 'react';
 import HomeLayout from '@/layouts/Home';
 
-const Home = (): JSX.Element => {
-  return <HomeLayout />;
-};
+function Home() {
+  return (
+    <div style={{ backgroundColor: '#0b0b0b' }}>
+      <HomeLayout />
+    </div>
+  );
+}
 
 export default Home;
