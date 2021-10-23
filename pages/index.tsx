@@ -3,7 +3,13 @@ import HomeLayout from '@/layouts/Home';
 
 function Home() {
   return (
-    <div style={{ backgroundColor: '#0b0b0b' }}>
+    <div
+      style={{
+        backgroundColor: '#0b0b0b',
+        overflowX: 'hidden',
+        position: 'relative',
+      }}
+    >
       <HomeLayout />
     </div>
   );

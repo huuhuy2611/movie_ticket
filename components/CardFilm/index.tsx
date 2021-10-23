@@ -10,7 +10,7 @@ interface IProps {
 }
 
 function CardFilm(props: IProps) {
-  const { name, img } = props;
+  const { content } = props;
   return (
     <div className="card-film">
       <Card
