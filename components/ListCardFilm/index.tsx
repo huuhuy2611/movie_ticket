@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import CardFilm from '../CardFilm';
 
@@ -26,8 +26,8 @@ const mockDataListFilms = [
   { name: 'Dune', img: '/images/test.jpg' },
 ];
 
-function ListCardFilm(props) {
-  const [numberShow, setNumberShow] = useState(8);
+function ListCardFilm() {
+  // const [numberShow, setNumberShow] = useState(8);
 
   // useEffect(() => {
   //   // call api get list film
@@ -66,7 +66,7 @@ function ListCardFilm(props) {
           justify-content: flex-start;
         }
         .list-card-content_item {
-          width: 25%;
+          width: 16.66%;
           padding: 15px;
         }
       `}</style>

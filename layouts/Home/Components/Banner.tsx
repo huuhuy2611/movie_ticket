@@ -1,85 +1,174 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Slider from 'react-slick';
-import { PlayCircleOutlined } from '@ant-design/icons';
+import {
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  CloseOutlined,
+  PlayCircleFilled,
+} from '@ant-design/icons';
+import { Modal } from 'antd';
 
-function Banner(props) {
+const mockDataBanner = [
+  {
+    img: '/images/banner_example-1.jpg',
+    link: 'https://www.youtube.com/embed/S8_YwFLCh4U?autoplay=1&showinfo=0',
+  },
+  {
+    img: '/images/banner_example-2.jpg',
+    link: 'https://www.youtube.com/embed/oqxAJKy0ii4?autoplay=1&showinfo=0',
+  },
+  {
+    img: '/images/banner_example-3.jpg',
+    link: 'https://www.youtube.com/embed/WDkg3h8PCVU?autoplay=1&showinfo=0',
+  },
+  {
+    img: '/images/banner_example-4.jpg',
+    link: 'https://www.youtube.com/embed/JuDLepNa7hw?autoplay=1&showinfo=0',
+  },
+];
+
+function Banner() {
+  const ref = useRef(null);
+
+  // const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentLink, setCurrentLink] = useState();
+  const [showTrailer, setShowTrailer] = useState(false);
+
   const settings = {
+    arrows: true,
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    // afterChange: (current: number) => setCurrentIndex(current),
+  };
+
+  const handlePrev = () => {
+    ref?.current?.slickPrev();
+  };
+
+  const handleNext = () => {
+    ref?.current?.slickNext();
+  };
+
+  const handlePlayTrailer = (link: string) => {
+    setShowTrailer(true);
+    setCurrentLink(link);
   };
 
   return (
     <div className="custom-carousel">
-      <Slider {...settings}>
-        <div className="test" style={{ width: '100%', height: '20%' }}>
-          <Image
-            alt="banner"
-            src="/images/banner_example.jpg"
-            width="1920"
-            height="650"
-            layout="responsive"
-          />
-          <div className="play">
-            <PlayCircleOutlined style={{ fontSize: '70px' }} />
+      <Slider {...settings} ref={ref}>
+        {mockDataBanner.map((item: { img: string; link: string }) => (
+          <div className="banner-item" style={{ width: '100%', height: '20%' }}>
+            <Image
+              alt="banner"
+              src={item?.img}
+              width="1920"
+              height="900"
+              layout="responsive"
+            />
+            <div className="play">
+              <PlayCircleFilled onClick={() => handlePlayTrailer(item?.link)} />
+            </div>
           </div>
-        </div>
-        <div style={{ width: '100%', height: '20%' }}>
-          <Image
-            alt="banner"
-            src="/images/banner_example.jpg"
-            width="1920"
-            height="650"
-            layout="responsive"
-          />
-          <div className="play">
-            <PlayCircleOutlined style={{ fontSize: '70px' }} />
-          </div>
-        </div>
-        <div style={{ width: '100%', height: '20%' }}>
-          <Image
-            alt="banner"
-            src="/images/banner_example.jpg"
-            width="1920"
-            height="650"
-            layout="responsive"
-          />
-          <div className="play">
-            <PlayCircleOutlined style={{ fontSize: '70px' }} />
-          </div>
-        </div>
-        <div style={{ width: '100%', height: '20%' }}>
-          <Image
-            alt="banner"
-            src="/images/banner_example.jpg"
-            width="1920"
-            height="650"
-            layout="responsive"
-          />
-          <div className="play">
-            <PlayCircleOutlined style={{ fontSize: '70px' }} />
-          </div>
-        </div>
+        ))}
       </Slider>
+      <div className="arrow-prev">
+        <CaretLeftOutlined onClick={handlePrev} />
+      </div>
+      <div className="arrow-next">
+        <CaretRightOutlined onClick={handleNext} />
+      </div>
+      {showTrailer && currentLink && (
+        <Modal
+          centered
+          visible={showTrailer}
+          width={1000}
+          footer={null}
+          onCancel={() => setShowTrailer(false)}
+          closeIcon={
+            <CloseOutlined
+              style={{
+                color: 'white',
+                fontSize: '20px',
+                position: 'absolute',
+                right: '0',
+                top: '0',
+              }}
+            />
+          }
+        >
+          <iframe
+            className="iframe-trailer"
+            title="trailer"
+            src={currentLink}
+            allowFullScreen
+            frameBorder="0"
+          />
+        </Modal>
+      )}
+
       <style jsx>{`
         .custom-carousel {
           color: #fff;
-          .play {
+          position: relative;
+
+          .arrow-next,
+          .arrow-prev {
+            font-size: 90px;
+            color: #605e5e85;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            z-index: 10;
-            .play-icon {
-              width: 200px;
+            top: calc(50% - 45px);
+            transition: 0.5s;
+            &:hover {
+              color: #8b8b8b7a;
+            }
+          }
+          .arrow-prev {
+          }
+          .arrow-next {
+            right: 0px;
+          }
+          .banner-item {
+            position: relative;
+            .play {
+              font-size: 90px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              transition: 0.7s;
+              z-index: 3;
+              color: #ffffff7a;
+              cursor: pointer;
+              &:hover {
+                color: #ffffffad;
+              }
             }
           }
         }
+
+        .iframe-trailer {
+          height: 80vh;
+          width: 100%;
+          border: 0;
+          .ytp-chrome-top-buttons {
+            display: none;
+          }
+        }
+        :global(.slick-dots) {
+          position: absolute;
+          bottom: 10px;
+        }
         :global(.slick-dots li button::before) {
           color: #fff !important;
+        }
+        :global(.ant-modal-body) {
+          padding: 0;
         }
       `}</style>
     </div>

@@ -6,6 +6,10 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+img {
+  cursor: pointer;
+}
+
 h1 {
   color: #fff !important;
 }
@@ -19,8 +23,14 @@ a {
   box-sizing: border-box;
 }
 
+/* margin */
+
 .mb-16 {
   margin-bottom: 16px;
+}
+
+.mr-16 {
+  margin-right: 16px;
 }
 
 .color-fff {
