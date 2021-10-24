@@ -20,7 +20,7 @@ function HomeLayout() {
                 height="20"
               />
             </span>
-            Now Showing
+            Đang chiếu
           </h1>
           <ListCardFilm />
         </div>
@@ -34,7 +34,7 @@ function HomeLayout() {
                 height="20"
               />
             </span>
-            Advance sale
+            Đặt trước
           </h1>
           <ListCardFilm />
         </div>
@@ -48,7 +48,7 @@ function HomeLayout() {
                 height="20"
               />
             </span>
-            Coming soon
+            Sắp chiếu
           </h1>
           <ListCardFilm />
         </div>
@@ -62,7 +62,7 @@ function HomeLayout() {
                 height="23"
               />
             </span>
-            Promotions
+            Ưu đãi
           </h1>
           <ComingSoon />
         </div>
@@ -81,6 +81,9 @@ function HomeLayout() {
             img {
               margin-bottom: 8px;
             }
+          }
+          h1 {
+            font-size: 25px;
           }
         }
       `}</style>

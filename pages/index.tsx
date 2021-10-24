@@ -1,18 +1,12 @@
-import React from 'react';
-import HomeLayout from '@/layouts/Home';
+import React, { useEffect } from 'react';
+import router from 'next/router';
 
 function Home() {
-  return (
-    <div
-      style={{
-        backgroundColor: '#0b0b0b',
-        overflowX: 'hidden',
-        position: 'relative',
-      }}
-    >
-      <HomeLayout />
-    </div>
-  );
+  useEffect(() => {
+    router.push('/movie');
+  }, []);
+
+  return <></>;
 }
 
 export default Home;
