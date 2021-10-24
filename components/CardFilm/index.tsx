@@ -1,51 +1,94 @@
 import { Button, Card } from 'antd';
 import React from 'react';
 import Image from 'next/image';
+import { PlayCircleFilled } from '@ant-design/icons';
+import router from 'next/router';
 
 interface IProps {
   content: {
     name: string;
     img: string;
+    link: string;
+    id: number;
   };
 }
 
 function CardFilm(props: IProps) {
   const { content } = props;
+
+  const handleTrailer = () => {
+    console.log(content?.link);
+  };
+
+  const handleMovieDetail = (id: number) => {
+    router.push(`/movie/${id}`);
+  };
+
   return (
     <div className="card-film">
       <Card
         hoverable
         cover={
-          // <img
-          //   alt="example"
-          //   src="https://i.pinimg.com/564x/e6/ba/0a/e6ba0a0e1a76e2fad592076f37bc50a3.jpg"
-          //   height={150}
-          // />
-          <Image
-            alt="example"
-            src="/images/test-2.jpg"
-            width={298}
-            height={440}
-          />
+          <div className="card-film-img">
+            <Image
+              alt="example"
+              src={content?.img}
+              width={298}
+              height={440}
+              onClick={() => handleMovieDetail(content?.id)}
+            />
+            <span className="card-film-img-play">
+              <PlayCircleFilled onClick={handleTrailer} />
+            </span>
+          </div>
         }
       >
-        <p className="mb-16 card-name">
-          Shang-Chi and The Legend of The Ten Rings
-        </p>
+        <div className="mb-16 card-film-name">
+          <span>{content?.name}</span>
+        </div>
         <Button type="primary" danger>
-          BUY TICKETS
+          MUA VÉ NGAY
         </Button>
       </Card>
       <style jsx>{`
         .card-film {
           width: 100%;
           text-align: center;
+          &-img {
+            position: relative;
+            &:hover {
+              .card-film-img-play {
+                color: rgb(255 255 255 / 62%);
+              }
+            }
+            &-play {
+              font-size: 40px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: transparent;
+              &:hover {
+                color: rgb(255 255 255 / 80%) !important;
+              }
+            }
+          }
+          &-name {
+            min-height: 43px;
+            color: #fff;
+          }
         }
         :global(.ant-card-bordered) {
           border: unset;
         }
         :global(.ant-card-cover, .ant-card-body) {
           background-color: #0b0b0b;
+        }
+        :global(.ant-card-body) {
+          padding: 24px 12px;
+        }
+        :global(.ant-btn) {
+          width: 85%;
         }
         .card-name {
           color: #fff;

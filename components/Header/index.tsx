@@ -15,6 +15,7 @@ function Header() {
             width={120}
             height={32.72}
             alt="Logo"
+            onClick={() => router.push('/movie')}
           />
         </Col>
       </Row>
@@ -22,13 +23,13 @@ function Header() {
         <div className="header-tabs-container">
           <div className="tab-detail">
             <span
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/movie')}
               onKeyDown={() => {}}
               role="button"
               tabIndex={0}
             >
-              Movies
-              {router.pathname === '/' && <div className="line" />}
+              Phim
+              {router.pathname.includes('/movie') && <div className="line" />}
             </span>
           </div>
           <div className="tab-detail">
@@ -38,7 +39,7 @@ function Header() {
               role="button"
               tabIndex={0}
             >
-              Cinemas
+              Rạp chiếu
               {router.pathname === '/cinemas' && <div className="line" />}
             </span>
           </div>
@@ -49,22 +50,27 @@ function Header() {
               role="button"
               tabIndex={0}
             >
-              Promotions
+              Ưu đãi
               {router.pathname === '/promotions' && <div className="line" />}
             </span>
           </div>
         </div>
 
-        <Row align="middle">
-          <img
-            src="/images/shopping-cart.png"
-            width={25}
-            height={25}
-            alt="Cart"
-            className="mr-16"
-          />
-          <Button ghost>SIGN UP/LOGIN</Button>
-        </Row>
+        <div className="header-login">
+          <div>
+            <img
+              src="/images/shopping-cart.png"
+              width={25}
+              height={25}
+              alt="Cart"
+              className="mr-16"
+            />
+          </div>
+
+          <Button ghost onClick={() => router.push('/login')}>
+            ĐĂNG KÝ/ĐĂNG NHẬP
+          </Button>
+        </div>
       </div>
       <style jsx>{`
         .header {
@@ -80,31 +86,43 @@ function Header() {
           align-items: center;
           justify-content: space-between;
           padding: 0 10%;
-          .header-tabs {
-            width: 60%;
+          &-tabs {
+            width: 50%;
             display: flex;
             justify-content: space-between;
-            .header-tabs-container {
-              display: flex;
+            &-container {
+              display: -webkit-box;
               align-items: center;
               .tab-detail {
                 color: #fff;
                 font-size: 18px;
-                padding: 0 10%;
-                position: relative;
+                padding: 0 15%;
                 cursor: pointer;
                 &:hover {
                   color: #cdcdcd;
                 }
-                .line {
-                  position: absolute;
-                  width: 33%;
-                  border-bottom: 3px solid #7f170e;
-                  left: 50%;
-                  transform: translate(-50%, -50%);
+                span {
+                  position: relative;
+                  .line {
+                    position: absolute;
+                    width: 50%;
+                    border-bottom: 3px solid #7f170e;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                  }
                 }
               }
             }
+          }
+          &-login {
+            display: flex;
+            align-items: center;
+          }
+        }
+        :global(.ant-btn-background-ghost) {
+          &:hover {
+            background-color: #fff !important;
+            color: #0b0b0b;
           }
         }
       `}</style>
