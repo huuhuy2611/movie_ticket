@@ -1,8 +1,12 @@
-import React from 'react';
-import HomeLayout from '@/layouts/Home';
+import React, { useEffect } from 'react';
+import router from 'next/router';
 
-const Home = (): JSX.Element => {
-  return <HomeLayout />;
-};
+function Home() {
+  useEffect(() => {
+    router.push('/movie');
+  }, []);
+
+  return <></>;
+}
 
 export default Home;

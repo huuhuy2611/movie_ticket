@@ -1,0 +1,9 @@
+.listCard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .listCard_item {
+    width: 25%;
+    padding: 15px;
+  }
+}
