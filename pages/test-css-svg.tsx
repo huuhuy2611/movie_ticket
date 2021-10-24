@@ -1,9 +1,9 @@
 import React from 'react';
-import { IconVercel } from '@/images';
 import Image from 'next/image';
+// import { IconVercel } from '@/images';
 import styles from '../styles/Home.module.scss';
 
-const index = (): JSX.Element => {
+function Test() {
   return (
     <div className={styles.container}>
       abcd
@@ -15,9 +15,9 @@ const index = (): JSX.Element => {
         height={16}
       />
       <br />
-      <IconVercel />
+      {/* <IconVercel /> */}
     </div>
   );
-};
+}
 
-export default index;
+export default Test;

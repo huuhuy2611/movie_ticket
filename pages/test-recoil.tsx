@@ -1,9 +1,9 @@
+import React from 'react';
+import { RecoilRoot } from 'recoil';
 import CompletedList from '@/layouts/TestRecoil/CompletedList';
 import InProgressList from '@/layouts/TestRecoil/InProgressList';
 import NewActionInput from '@/layouts/TestRecoil/NewActionInput';
 import NewList from '@/layouts/TestRecoil/NewList';
-import React from 'react';
-import { RecoilRoot } from 'recoil';
 
 function TestRecoil() {
   return (
