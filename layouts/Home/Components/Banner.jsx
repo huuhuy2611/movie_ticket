@@ -54,7 +54,7 @@ function Banner() {
     ref?.current?.slickNext();
   };
 
-  const handlePlayTrailer = (link: string) => {
+  const handlePlayTrailer = (link) => {
     setShowTrailer(true);
     setCurrentLink(link);
   };
@@ -62,7 +62,7 @@ function Banner() {
   return (
     <div className="custom-carousel">
       <Slider {...settings} ref={ref}>
-        {mockDataBanner.map((item: { img: string; link: string }) => (
+        {mockDataBanner.map((item) => (
           <div className="banner-item" style={{ width: '100%', height: '20%' }}>
             <Image
               alt="banner"
