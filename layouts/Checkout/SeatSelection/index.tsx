@@ -89,7 +89,6 @@ function SeatSelection(props: IProps) {
 
   return (
     <div className="seat-selection">
-      <h1 className="mb-16 seat-selection-name-cinema">DUNE</h1>
       <div className="seat-selection-select-fields mb-64">
         <Select
           value={infoTicket?.cinema || undefined}
@@ -175,6 +174,7 @@ function SeatSelection(props: IProps) {
 
         div :global(.ant-select-selection-item) {
           color: white !important;
+          padding-top: 4px !important;
         }
 
         div :global(.ant-select-selection-placeholder) {

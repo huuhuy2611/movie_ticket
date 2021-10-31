@@ -8,7 +8,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Header from '@/components/Header';
 
-const blacklist = ['/login'];
+const blacklist = ['/auth'];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

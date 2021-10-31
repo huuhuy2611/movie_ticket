@@ -46,7 +46,7 @@ function CardFilm(props: IProps) {
         <div className="mb-16 card-film-name">
           <span>{content?.name}</span>
         </div>
-        <Button type="primary" danger>
+        <Button type="primary" danger onClick={() => router.push('/checkout')}>
           MUA VÉ NGAY
         </Button>
       </Card>
@@ -86,9 +86,6 @@ function CardFilm(props: IProps) {
         }
         :global(.ant-card-body) {
           padding: 24px 12px;
-        }
-        :global(.ant-btn) {
-          width: 85%;
         }
         .card-name {
           color: #fff;
