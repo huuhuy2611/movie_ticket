@@ -57,7 +57,7 @@ function Header() {
         </div>
 
         <div className="header-login">
-          <div>
+          {/* <div>
             <img
               src="/images/shopping-cart.png"
               width={25}
@@ -65,9 +65,9 @@ function Header() {
               alt="Cart"
               className="mr-16"
             />
-          </div>
+          </div> */}
 
-          <Button ghost onClick={() => router.push('/login')}>
+          <Button ghost onClick={() => router.push('/auth')}>
             ĐĂNG KÝ/ĐĂNG NHẬP
           </Button>
         </div>

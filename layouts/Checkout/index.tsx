@@ -37,6 +37,10 @@ function CheckoutLayout() {
             <Step title="Xác nhận" />
           </Steps>
         </div>
+        <h1 className="mb-16 checkout-layout-right-name-cinema">
+          Đại chiến Godzilla vs. Kong
+        </h1>
+
         <SeatSelection infoTicket={infoTicket} setInfoTicket={setInfoTicket} />
       </div>
 
@@ -50,6 +54,10 @@ function CheckoutLayout() {
           }
           &-right {
             width: 70%;
+            &-name-cinema {
+              font-size: 2rem;
+              font-weight: 300;
+            }
           }
         }
 
