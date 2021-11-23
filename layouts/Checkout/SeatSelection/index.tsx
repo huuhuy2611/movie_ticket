@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select } from 'antd';
+import { Select, Table } from 'antd';
 import LayoutSeat from '@/components/LayoutSeat';
 import { InfoTicket } from '..';
 
@@ -12,6 +12,39 @@ interface IProps {
 
 function SeatSelection(props: IProps) {
   const { infoTicket, setInfoTicket } = props;
+
+  const dataSource = [
+    {
+      key: '1',
+      location: 'A1, A3',
+      price: '50000VNĐ',
+      drink: 'Có',
+      total: '150000VNĐ',
+    },
+  ];
+
+  const columns = [
+    {
+      title: 'Vị trí',
+      dataIndex: 'location',
+      key: 'location',
+    },
+    {
+      title: 'Giá vé',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Thêm bỏng + nước',
+      dataIndex: 'drink',
+      key: 'drink',
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'total',
+      key: 'total',
+    },
+  ];
 
   const listReserved = [
     'A1',
@@ -97,7 +130,9 @@ function SeatSelection(props: IProps) {
           onChange={(cinema: string) => handleSelectCinema(cinema)}
         >
           {optionsCinema.map((cinema: { label: string; value: string }) => (
-            <Option value={cinema?.value}>{cinema?.label}</Option>
+            <Option key={cinema?.value} value={cinema?.value}>
+              {cinema?.label}
+            </Option>
           ))}
         </Select>
         <Select
@@ -127,12 +162,15 @@ function SeatSelection(props: IProps) {
           <h1 className="mb-16 seat-selection-name-cinema">SCREEN</h1>
         </div>
       </div>
-      <div className="seat-selection-layout-seat">
+      <div className="seat-selection-layout-seat mb-64">
         <LayoutSeat
           listReserved={listReserved}
           listSelected={listSelected}
           setListSelected={setListSelected}
         />
+      </div>
+      <div>
+        <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>
       <style jsx>{`
         .seat-selection {

@@ -1,8 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  IData,
+  IResponseMoviceDetail,
+} from '@/common/interface/movie.interface';
+import { getMovieDetailAPI } from '@/services/movieService';
 
 function MovieDetail() {
+  const [dataMovieDetail, setDataMovieDetail] = useState<IData>();
+
+  useEffect(() => {
+    const getMovieDetail = getMovieDetailAPI(
+      '619d1da261a9789154313d1e'
+    ) as IResponseMoviceDetail;
+    if (getMovieDetail?.message === 'success') {
+      setDataMovieDetail(getMovieDetail?.data);
+    }
+  }, []);
+
   return (
     <div className="movie-detail">
       <div className="backdrop" />

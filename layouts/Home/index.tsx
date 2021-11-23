@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ListCardFilm from '@/components/ListCardFilm';
 import Banner from './Components/Banner';
 import ComingSoon from './Components/ComingSoon';
+import { getListMovieAPI } from '@/services/movieService';
 
 function HomeLayout() {
+  useEffect(() => {
+    const getListMovie = getListMovieAPI();
+    console.log('dasdasdasdsad', getListMovie);
+  }, []);
+
   return (
     <div className="home">
       <div>
