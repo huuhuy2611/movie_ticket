@@ -1,31 +1,35 @@
 import { ISeat } from '@/common/interface/movie.interface';
+import { InfoTicket } from '@/layouts/Checkout';
 import { Col, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './layoutSeat.module.scss';
 
 interface IProps {
   // listReserved: string[];
-  listSelected: string[];
   dataSeats: { [key: number]: ISeat[] };
   vipPrice: number;
-  setListSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  infoTicket: InfoTicket;
+  setInfoTicket: React.Dispatch<React.SetStateAction<InfoTicket>>;
 }
 
 function LayoutSeat(props: IProps) {
-  const { dataSeats, vipPrice, setListSelected, listSelected } = props;
+  const { dataSeats, vipPrice, infoTicket, setInfoTicket } = props;
 
   const [widthItem, setWidthItem] = useState(0);
 
-  const handleSelectSeat = (locationSeat: string) => {
-    const tempListSelected = listSelected;
-    if (tempListSelected.find((item: string) => item === locationSeat)) {
+  const handleSelectSeat = (seat: ISeat) => {
+    const tempListSelected = infoTicket?.selectedSeats;
+    if (tempListSelected.find((item: ISeat) => item === seat)) {
       const filterSelected = tempListSelected.filter(
-        (item: string) => item !== locationSeat
+        (item: ISeat) => item !== seat
       );
-      setListSelected(filterSelected);
+      setInfoTicket((prev) => ({ ...prev, selectedSeats: filterSelected }));
       return;
     }
-    setListSelected([...listSelected, locationSeat]);
+    setInfoTicket((prev) => ({
+      ...prev,
+      selectedSeats: [...infoTicket?.selectedSeats, seat],
+    }));
   };
 
   useEffect(() => {
@@ -59,13 +63,13 @@ function LayoutSeat(props: IProps) {
                       } ${
                         seat?.ticketPrice === vipPrice ? styles.itemVip : ''
                       } ${
-                        listSelected.includes(seat?.code)
+                        infoTicket?.selectedSeats.includes(seat)
                           ? styles.itemSelected
                           : ''
                       }`}
                       role="button"
                       tabIndex={0}
-                      onClick={() => handleSelectSeat(seat?.code)}
+                      onClick={() => handleSelectSeat(seat)}
                       onKeyDown={() => {}}
                     >
                       {seat?.code}

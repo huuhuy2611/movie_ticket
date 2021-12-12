@@ -39,55 +39,6 @@ function SeatSelection(props: IProps) {
   const [vipPrice, setVipPrice] = useState<number>(0);
   const [dataSeats, setDataSeats] = useState<{ [key: number]: ISeat[] }>();
 
-  const dataSource = [
-    {
-      key: '1',
-      location: 'A1, A3',
-      price: '50000VNĐ',
-      drink: 'Có',
-      total: '150000VNĐ',
-    },
-  ];
-
-  const columns = [
-    {
-      title: 'Vị trí',
-      dataIndex: 'location',
-      key: 'location',
-    },
-    {
-      title: 'Giá vé',
-      dataIndex: 'price',
-      key: 'price',
-    },
-    {
-      title: 'Thêm bỏng + nước',
-      dataIndex: 'drink',
-      key: 'drink',
-    },
-    {
-      title: 'Tổng tiền',
-      dataIndex: 'total',
-      key: 'total',
-    },
-  ];
-
-  const listReserved = [
-    'A1',
-    'A2',
-    'A3',
-    'A4',
-    'B4',
-    'B5',
-    'B6',
-    'C8',
-    'C9',
-    'C10',
-    'C11',
-  ];
-
-  const [listSelected, setListSelected] = useState<string[]>([]);
-
   const getDataCinemaByMovie = async (id: string) => {
     const res = await getCinemasByMovie(id);
     if (res?.foundItems) {
@@ -139,7 +90,7 @@ function SeatSelection(props: IProps) {
 
   const handleSelectCinema = (cinema: string) => {
     if (idMovie) {
-      const tempInfo = { ...infoTicket, cinema };
+      const tempInfo = { ...infoTicket, cinema, date: '', roomId: '' };
       setInfoTicket(tempInfo);
       getDataDateByCinemaAndMovie(cinema, idMovie as string);
     }
@@ -147,7 +98,7 @@ function SeatSelection(props: IProps) {
 
   const handleSelectDate = (date: string) => {
     if (idMovie && infoTicket?.cinema) {
-      const tempInfo = { ...infoTicket, date };
+      const tempInfo = { ...infoTicket, date, roomId: '' };
       setInfoTicket(tempInfo);
       getDataSchdulesByMovie(idMovie as string, infoTicket?.cinema, date);
     }
@@ -169,7 +120,7 @@ function SeatSelection(props: IProps) {
 
   return (
     <div className="seat-selection">
-      <div className="seat-selection-select-fields mb-64">
+      <div className="seat-selection-select-fields mb-32">
         <Select
           value={infoTicket?.cinema || undefined}
           style={{ width: '30%' }}
@@ -206,26 +157,26 @@ function SeatSelection(props: IProps) {
           ))}
         </Select>
       </div>
-      <div className="seat-selection-hr">
-        <hr />
-        <div className="div-center">
-          <h1 className="mb-16 seat-selection-name-cinema">MÀN HÌNH</h1>
-        </div>
-      </div>
       {dataSeats && vipPrice && (
-        <div className="seat-selection-layout-seat mb-64">
-          <LayoutSeat
-            dataSeats={dataSeats as { [key: number]: ISeat[] }}
-            vipPrice={vipPrice}
-            listSelected={listSelected}
-            setListSelected={setListSelected}
-          />
-        </div>
+        <>
+          <div className="seat-selection-hr">
+            <hr />
+            <div className="div-center">
+              <h1 className="mb-16 seat-selection-name-cinema">MÀN HÌNH</h1>
+            </div>
+          </div>
+
+          <div className="seat-selection-layout-seat mb-64">
+            <LayoutSeat
+              dataSeats={dataSeats as { [key: number]: ISeat[] }}
+              vipPrice={vipPrice}
+              infoTicket={infoTicket}
+              setInfoTicket={setInfoTicket}
+            />
+          </div>
+        </>
       )}
 
-      <div>
-        <Table dataSource={dataSource} columns={columns} pagination={false} />
-      </div>
       <style jsx>{`
         .seat-selection {
           &-name-cinema {
@@ -235,7 +186,7 @@ function SeatSelection(props: IProps) {
           }
           &-select-fields {
             display: flex;
-            width: 90%;
+            width: 100%;
             justify-content: space-between;
           }
           &-hr {

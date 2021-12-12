@@ -74,6 +74,7 @@ function HomeLayout() {
             padding: 5% 12%;
             .now-showing {
               margin-bottom: 5%;
+              z-index: 10;
             }
             .img-now-showing {
               padding-right: 10px;

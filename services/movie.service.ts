@@ -90,3 +90,14 @@ export const getSeatsByRoom = async (roomId: string) => {
     return err;
   }
 };
+
+// review movies
+
+export const getReviewByMovie = async (movieId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/Movies/${movieId}/reviews`);
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};

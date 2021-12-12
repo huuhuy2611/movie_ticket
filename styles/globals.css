@@ -57,6 +57,10 @@ a {
   margin-bottom: 64px;
 }
 
+.mr-8 {
+  margin-right: 8px;
+}
+
 .mr-16 {
   margin-right: 16px;
 }
@@ -3793,14 +3797,6 @@ fieldset[disabled] .button.is-link.is-outlined {
   background-color: transparent;
   border-color: #fff;
   color: #fff;
-}
-
-.button.is-link.is-inverted.is-outlined.is-focused,
-.button.is-link.is-inverted.is-outlined.is-hovered,
-.button.is-link.is-inverted.is-outlined:focus,
-.button.is-link.is-inverted.is-outlined:hover {
-  background-color: #fff;
-  color: #3273dc;
 }
 
 .button.is-link.is-inverted.is-outlined.is-loading.is-focused:after,
