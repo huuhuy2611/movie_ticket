@@ -1,42 +1,80 @@
 import { Button, Card } from 'antd';
-import React from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 import { PlayCircleFilled } from '@ant-design/icons';
 import router from 'next/router';
+import { IFoundItem } from '@/common/interface/movie.interface';
+import ModalTrailer from '../Modal/ModalTrailer';
 
 interface IProps {
-  content: {
-    name: string;
-    img: string;
-    link: string;
-    id: number;
-  };
+  content: IFoundItem;
 }
 
 function CardFilm(props: IProps) {
   const { content } = props;
 
+  const [imageURL, setImageURL] = useState({
+    src: content.posterUrl,
+    errored: false,
+  });
+
+  const [showModalTrailer, setShowModalTrailer] = useState(false);
+  const [urlTrailer, setUrlTrailer] = useState('');
+
   const handleTrailer = () => {
-    console.log(content?.link);
+    setShowModalTrailer(true);
+    setUrlTrailer(content?.trailerUrl);
   };
 
-  const handleMovieDetail = (id: number) => {
+  const handleMovieDetail = (id: string) => {
     router.push(`/movie/${id}`);
   };
 
+  const onError = (state: any) => {
+    //1st error
+    if (!state.errored) {
+      setImageURL({
+        src: '/images/test.jpg',
+        errored: true,
+      });
+    } else if (state.errored && state.src) {
+      //2nd error
+      //when error on fallbacksrc - remove src
+      setImageURL({
+        src: '',
+        errored: true,
+      });
+    }
+  };
+
+  //update(next img) state onMount
+  useEffect(() => {
+    setImageURL({
+      src: content.posterUrl,
+      errored: false,
+    });
+  }, [content.posterUrl]);
+
   return (
     <div className="card-film">
+      {showModalTrailer && urlTrailer && (
+        <ModalTrailer
+          setShowModal={setShowModalTrailer}
+          linkTrailer={urlTrailer}
+        />
+      )}
       <Card
         hoverable
         cover={
           <div className="card-film-img">
-            <Image
-              alt="example"
-              src={content?.img}
-              width={298}
-              height={440}
-              onClick={() => handleMovieDetail(content?.id)}
-            />
+            {imageURL?.src && (
+              <img
+                alt="example"
+                src={imageURL.src}
+                onClick={() => handleMovieDetail(content?.id)}
+                onError={onError}
+              />
+            )}
+
             <span className="card-film-img-play">
               <PlayCircleFilled onClick={handleTrailer} />
             </span>
@@ -54,8 +92,19 @@ function CardFilm(props: IProps) {
         .card-film {
           width: 100%;
           text-align: center;
+          .trailer {
+            position: fixed;
+            top: 20vh;
+            left: 15vw;
+            width: 70vw;
+            height: 70vh;
+            z-index: 10;
+          }
           &-img {
             position: relative;
+            width: 100%;
+            height: 430px;
+            overflow: hidden;
             &:hover {
               .card-film-img-play {
                 color: rgb(255 255 255 / 62%);

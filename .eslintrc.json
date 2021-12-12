@@ -29,10 +29,6 @@
         "import/prefer-default-export": "off",
         "no-confusing-arrow": "off",
         "linebreak-style": "off",
-        "arrow-parens": [
-            "error",
-            "as-needed"
-        ],
         "comma-dangle": [
             "error",
             {
@@ -64,6 +60,12 @@
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": [
             "error"
+        ],
+        "arrow-parens": [
+            "as-needed",
+            {
+                "requireForBlockBody": true
+            }
         ]
     }
 }

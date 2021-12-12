@@ -5,13 +5,13 @@ import {
   IData,
   IResponseMoviceDetail,
 } from '@/common/interface/movie.interface';
-import { getMovieDetailAPI } from '@/services/movieService';
+import { getMovieDetails } from '@/services/movie.service';
 
 function MovieDetail() {
   const [dataMovieDetail, setDataMovieDetail] = useState<IData>();
 
   useEffect(() => {
-    const getMovieDetail = getMovieDetailAPI(
+    const getMovieDetail = getMovieDetails(
       '619d1da261a9789154313d1e'
     ) as IResponseMoviceDetail;
     if (getMovieDetail?.message === 'success') {

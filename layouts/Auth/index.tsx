@@ -9,7 +9,17 @@ const { TabPane } = Tabs;
 function Auth() {
   return (
     <div className="auth">
-      <div style={{ width: '25%', minWidth: '380px' }}>
+      <div
+        style={{
+          backgroundImage: `url(${'/images/img-auth-2.png'})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          height: '100%',
+          width: '100%',
+          filter: 'blur(3px)',
+        }}
+      />
+      <div style={{ width: '25%', minWidth: '380px', position: 'absolute' }}>
         <div className="auth-logo mb-16">
           <Image
             src="/images/teatro_logo.png"

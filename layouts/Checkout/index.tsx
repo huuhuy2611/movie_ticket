@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Steps } from 'antd';
 import SeatSelection from './SeatSelection';
+import { useRouter } from 'next/router';
 
 const { Step } = Steps;
 
@@ -12,12 +13,20 @@ export interface InfoTicket {
 }
 
 function CheckoutLayout() {
+  const router = useRouter();
+
   const [infoTicket, setInfoTicket] = useState<InfoTicket>({
     cinema: '',
     date: '',
     time: '',
   });
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (router.query.id) {
+      // call api schedule
+    }
+  }, [router.query]);
 
   return (
     <div className="checkout-layout">
