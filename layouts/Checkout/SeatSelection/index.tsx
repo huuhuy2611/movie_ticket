@@ -24,10 +24,12 @@ const { Option } = Select;
 interface IProps {
   infoTicket: InfoTicket;
   setInfoTicket: React.Dispatch<React.SetStateAction<InfoTicket>>;
+  vipPrice: number;
+  setVipPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function SeatSelection(props: IProps) {
-  const { infoTicket, setInfoTicket } = props;
+  const { infoTicket, setInfoTicket, vipPrice, setVipPrice } = props;
 
   const router = useRouter();
 
@@ -36,7 +38,6 @@ function SeatSelection(props: IProps) {
   const [optionCinemas, setOptionCinemas] = useState([]);
   const [optionDates, setOptionDates] = useState<string[]>([]);
   const [optionTimes, setOptionTimes] = useState<IDataScheduleByMovie[]>([]);
-  const [vipPrice, setVipPrice] = useState<number>(0);
   const [dataSeats, setDataSeats] = useState<{ [key: number]: ISeat[] }>();
   const [selectedRoomId, setSelectedRoomId] = useState('');
 
@@ -119,10 +120,11 @@ function SeatSelection(props: IProps) {
       const selectedSchedule = optionTimes?.find(
         (item) => item?.id === scheduleId
       );
+
       if (selectedSchedule) {
-        setSelectedRoomId(selectedSchedule?.roomId);
+        setSelectedRoomId(selectedSchedule?.room?.id);
       }
-      getDataSeatsByRoom(selectedSchedule?.roomId as string);
+      getDataSeatsByRoom(selectedSchedule?.room?.id as string);
     }
   };
 

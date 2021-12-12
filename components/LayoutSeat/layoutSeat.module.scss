@@ -11,7 +11,7 @@
   margin: 7px;
 }
 .itemReserved {
-  background-color: grey;
+  background-color: grey !important;
   cursor: not-allowed;
   pointer-events: none;
 }
