@@ -33,6 +33,7 @@ export const register = async ({
     });
     if (res) {
       localStorage.setItem('token', res?.data?.authenticationToken);
+      localStorage.setItem('dataUser', JSON.stringify(res?.data || {}));
     }
     return { ...res?.data, success: true };
   } catch (err) {

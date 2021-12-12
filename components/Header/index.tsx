@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Col, Dropdown, Menu, Row } from 'antd';
+import { Button, Col, Dropdown, Input, Menu, Row } from 'antd';
 import { useRouter } from 'next/router';
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { IUser } from '@/common/interface/auth.interface';
@@ -60,7 +60,7 @@ function Header() {
         </Col>
       </Row>
       <div className="header-tabs">
-        <div className="header-tabs-container">
+        {/* <div className="header-tabs-container">
           <div className="tab-detail">
             <span
               onClick={() => router.push('/movie')}
@@ -83,18 +83,7 @@ function Header() {
               {router.pathname === '/cinemas' && <div className="line" />}
             </span>
           </div>
-          {/* <div className="tab-detail">
-            <span
-              onClick={() => router.push('/promotions')}
-              onKeyDown={() => {}}
-              role="button"
-              tabIndex={0}
-            >
-              Ưu đãi
-              {router.pathname === '/promotions' && <div className="line" />}
-            </span>
-          </div> */}
-        </div>
+        </div> */}
 
         <div className="header-login">
           {dataUser?.name ? (
@@ -127,12 +116,9 @@ function Header() {
           justify-content: space-between;
           padding: 0 7%;
           &-tabs {
-            width: 30vw;
             display: flex;
             justify-content: space-between;
-            @media (max-width: 1200px) {
-              width: 40vw;
-            }
+
             &-container {
               display: -webkit-box;
               align-items: center;

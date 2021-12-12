@@ -7,7 +7,7 @@ export const GENRE_TYPE = {
   Animation: 'Hoạt hình',
   Children: 'Trẻ em',
   Comedy: 'Hài hước',
-  Crime: 'Tội phạn',
+  Crime: 'Tội phạm',
   Documentary: 'Tài liệu',
   Drama: 'Drama',
   Fantasy: 'Viễn tưởng',
@@ -21,3 +21,24 @@ export const GENRE_TYPE = {
   War: 'Chiến tranh',
   Western: 'Âu Mỹ',
 };
+
+export const GENRE_TYPE_ARRAY = [
+  'Action',
+  'Adventure',
+  'Animation',
+  'Children',
+  'Comedy',
+  'Crime',
+  'Documentary',
+  'Drama',
+  'Fantasy',
+  'Film-Noir',
+  'Horror',
+  'Musical',
+  'Mystery',
+  'Romance',
+  'Sci-Fi',
+  'Thriller',
+  'War',
+  'Western',
+];
