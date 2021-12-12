@@ -9,6 +9,7 @@ import {
   getDatesByMovie,
   getMovieDetails,
 } from '@/services/movie.service';
+import Payment from './Payment';
 
 const { Step } = Steps;
 
@@ -28,7 +29,7 @@ function CheckoutLayout() {
     roomId: '',
     selectedSeats: [],
   });
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [dataMovie, setDataMovie] = useState<IDataMovie>();
 
   const getDataMovie = async (id: string) => {
