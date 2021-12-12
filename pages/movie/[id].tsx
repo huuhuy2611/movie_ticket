@@ -8,8 +8,6 @@ import {
 } from '@/common/interface/movie.interface';
 import { getMovieDetails, getReviewByMovie } from '@/services/movie.service';
 import { useRouter } from 'next/router';
-import { GENRE_TYPE } from '@/common/constant/regex';
-import { convertUIRunningTime } from '@/common/ultils/common';
 import { useTranslation } from 'react-i18next';
 import { Button, Row } from 'antd';
 import ModalTrailer from '@/components/Modal/ModalTrailer';
@@ -19,7 +17,7 @@ function MovieDetail() {
   const router = useRouter();
 
   const [dataMovieDetail, setDataMovieDetail] = useState<IDataMovie>();
-  const [dataReviews, setDataReviews] = useState<IDataReview[]>();
+  const [dataReviews, setDataReviews] = useState<IDataReview[]>([]);
   const [showModalTrailer, setShowModalTrailer] = useState(false);
   const [dataTrailer, setDatatrailer] = useState('');
 
@@ -121,31 +119,34 @@ function MovieDetail() {
           </div>
         </div>
       </section>
-      <div className="review">
-        <div className="title">Đánh giá của người xem</div>
-        <div className="content">
-          {dataReviews?.map((review) => (
-            <>
-              <Row className="mb-16" style={{ flexWrap: 'nowrap' }}>
-                <Row align="middle" justify="center">
-                  <img
-                    alt="user"
-                    width="50"
-                    height="50"
-                    src="/images/user.png"
-                    style={{ borderRadius: '50%' }}
-                  />
-                </Row>
+      {dataReviews?.length > 0 && (
+        <div className="review">
+          <div className="title">Đánh giá của người xem</div>
+          <div className="content">
+            {dataReviews?.map((review) => (
+              <>
+                <Row className="mb-16" style={{ flexWrap: 'nowrap' }}>
+                  <Row align="middle" justify="center">
+                    <img
+                      alt="user"
+                      width="50"
+                      height="50"
+                      src="/images/user.png"
+                      style={{ borderRadius: '50%' }}
+                    />
+                  </Row>
 
-                <div className="ml-5">
-                  <div className="user-name">{review?.customer?.name}</div>
-                  <div className="comment">{review?.comment}</div>
-                </div>
-              </Row>
-            </>
-          ))}
+                  <div className="ml-5">
+                    <div className="user-name">{review?.customer?.name}</div>
+                    <div className="comment">{review?.comment}</div>
+                  </div>
+                </Row>
+              </>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
       <style jsx>
         {`
           .movie-detail {

@@ -10,13 +10,15 @@ import {
   getMovieDetails,
 } from '@/services/movie.service';
 import Payment from './Payment';
+import { createReserve } from '@/services/payment.service';
+import Confirmation from './Confirmation';
 
 const { Step } = Steps;
 
 export interface InfoTicket {
-  cinema: string;
+  cinema: any;
   date: string;
-  roomId: string;
+  scheduleId: string;
   selectedSeats: ISeat[];
 }
 
@@ -24,19 +26,32 @@ function CheckoutLayout() {
   const router = useRouter();
 
   const [infoTicket, setInfoTicket] = useState<InfoTicket>({
-    cinema: '',
+    cinema: null,
     date: '',
-    roomId: '',
+    scheduleId: '',
     selectedSeats: [],
   });
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [dataMovie, setDataMovie] = useState<IDataMovie>();
+  const [reservationId, setReservationId] = useState('');
 
   const getDataMovie = async (id: string) => {
     const res = await getMovieDetails(id);
 
     if (res?.success) {
       setDataMovie(res);
+    }
+  };
+
+  const handleCreateReservation = async () => {
+    const dataCreateReservation = {
+      scheduleId: infoTicket?.scheduleId,
+      seats: infoTicket?.selectedSeats?.map((seat) => seat?.code),
+    };
+    const res = (await createReserve(dataCreateReservation)) as any;
+    if (res?.success) {
+      setStep(step + 1);
+      setReservationId(res?.created?.id);
     }
   };
 
@@ -63,25 +78,30 @@ function CheckoutLayout() {
           >
             {dataMovie?.name}
           </h1>
-          <div className="note">
-            <Row align="middle">
-              <div className="note-reserved" /> <span> : Đã đặt</span>
-            </Row>
-            <Row align="middle">
-              <div className="note-available" />
-              <span> : Có sẵn</span>
-            </Row>
+          {step === 0 &&
+            infoTicket?.cinema &&
+            infoTicket?.date &&
+            infoTicket?.scheduleId && (
+              <div className="note">
+                <Row align="middle">
+                  <div className="note-reserved" /> <span> : Đã đặt</span>
+                </Row>
+                <Row align="middle">
+                  <div className="note-available" />
+                  <span> : Có sẵn</span>
+                </Row>
 
-            <Row align="middle">
-              <div className="note-selected" />
-              <span> : Đã chọn</span>
-            </Row>
+                <Row align="middle">
+                  <div className="note-selected" />
+                  <span> : Đã chọn</span>
+                </Row>
 
-            <Row align="middle">
-              <div className="note-vip" />
-              <span> : Ghê VIP</span>
-            </Row>
-          </div>
+                <Row align="middle">
+                  <div className="note-vip" />
+                  <span> : Ghế VIP</span>
+                </Row>
+              </div>
+            )}
         </div>
         <div className="checkout-layout-right">
           <div className="mb-32">
@@ -91,30 +111,34 @@ function CheckoutLayout() {
               <Step title="Xác nhận" />
             </Steps>
           </div>
-          <div className="prev-next-btn mb-32">
-            {step > 0 && (
-              <Button
-                className="mr-16"
-                style={{ borderRadius: '8px' }}
-                onClick={() => setStep(step - 1)}
-              >
-                Quay lại
-              </Button>
-            )}
 
-            <Button
-              style={{ borderRadius: '8px' }}
-              onClick={() => setStep(step + 1)}
-            >
-              Tiếp theo
-            </Button>
-          </div>
           {step === 0 && (
-            <SeatSelection
+            <>
+              <div className="prev-next-btn mb-32">
+                <Button
+                  style={{ borderRadius: '8px' }}
+                  onClick={() => {
+                    handleCreateReservation();
+                  }}
+                >
+                  Tiếp theo
+                </Button>
+              </div>{' '}
+              <SeatSelection
+                infoTicket={infoTicket}
+                setInfoTicket={setInfoTicket}
+              />
+            </>
+          )}
+          {step === 1 && (
+            <Payment
               infoTicket={infoTicket}
-              setInfoTicket={setInfoTicket}
+              step={step}
+              setStep={setStep}
+              reservationId={reservationId}
             />
           )}
+          {step === 2 && <Confirmation />}
         </div>
         <style jsx>{`
           .checkout-layout {

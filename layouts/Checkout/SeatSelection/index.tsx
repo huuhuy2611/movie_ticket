@@ -38,6 +38,7 @@ function SeatSelection(props: IProps) {
   const [optionTimes, setOptionTimes] = useState<IDataScheduleByMovie[]>([]);
   const [vipPrice, setVipPrice] = useState<number>(0);
   const [dataSeats, setDataSeats] = useState<{ [key: number]: ISeat[] }>();
+  const [selectedRoomId, setSelectedRoomId] = useState('');
 
   const getDataCinemaByMovie = async (id: string) => {
     const res = await getCinemasByMovie(id);
@@ -84,13 +85,20 @@ function SeatSelection(props: IProps) {
       const maxPrice = Math.max(...listPrice);
       setVipPrice(maxPrice as number);
       setDataSeats(groupSeats);
-      console.log('sea', res?.seats, groupSeats);
     }
   };
 
   const handleSelectCinema = (cinema: string) => {
     if (idMovie) {
-      const tempInfo = { ...infoTicket, cinema, date: '', roomId: '' };
+      const findCinema = optionCinemas?.find(
+        (item: { id: string }) => item.id === cinema
+      );
+      const tempInfo = {
+        ...infoTicket,
+        cinema: findCinema,
+        date: '',
+        scheduleId: '',
+      };
       setInfoTicket(tempInfo);
       getDataDateByCinemaAndMovie(cinema, idMovie as string);
     }
@@ -98,17 +106,23 @@ function SeatSelection(props: IProps) {
 
   const handleSelectDate = (date: string) => {
     if (idMovie && infoTicket?.cinema) {
-      const tempInfo = { ...infoTicket, date, roomId: '' };
+      const tempInfo = { ...infoTicket, date, scheduleId: '' };
       setInfoTicket(tempInfo);
-      getDataSchdulesByMovie(idMovie as string, infoTicket?.cinema, date);
+      getDataSchdulesByMovie(idMovie as string, infoTicket?.cinema?.id, date);
     }
   };
 
-  const handleSelectTime = (roomId: string) => {
+  const handleSelectTime = (scheduleId: string) => {
     if (idMovie && infoTicket?.cinema && infoTicket?.date) {
-      const tempInfo = { ...infoTicket, roomId };
+      const tempInfo = { ...infoTicket, scheduleId };
       setInfoTicket(tempInfo);
-      getDataSeatsByRoom(roomId);
+      const selectedSchedule = optionTimes?.find(
+        (item) => item?.id === scheduleId
+      );
+      if (selectedSchedule) {
+        setSelectedRoomId(selectedSchedule?.roomId);
+      }
+      getDataSeatsByRoom(selectedSchedule?.roomId as string);
     }
   };
 
@@ -122,7 +136,7 @@ function SeatSelection(props: IProps) {
     <div className="seat-selection">
       <div className="seat-selection-select-fields mb-32">
         <Select
-          value={infoTicket?.cinema || undefined}
+          value={infoTicket?.cinema?.id || undefined}
           style={{ width: '30%' }}
           placeholder="Chọn rạp..."
           onChange={(cinema: string) => handleSelectCinema(cinema)}
@@ -145,14 +159,14 @@ function SeatSelection(props: IProps) {
         </Select>
         <Select
           disabled={!(infoTicket?.cinema && infoTicket?.date)}
-          value={infoTicket?.roomId || undefined}
+          value={infoTicket?.scheduleId || undefined}
           style={{ width: '30%' }}
           placeholder="Chọn suất chiếu..."
-          onChange={(time: string) => handleSelectTime(time)}
+          onChange={(scheduleId: string) => handleSelectTime(scheduleId)}
         >
           {optionTimes.map((time) => (
-            <Option value={time?.roomId}>
-              {moment(time?.startTime).format('HH:mmA')}
+            <Option value={time?.id}>
+              {moment(time?.startTime).format('HH:mm A')}
             </Option>
           ))}
         </Select>
