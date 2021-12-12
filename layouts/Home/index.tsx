@@ -52,20 +52,6 @@ function HomeLayout() {
           </h1>
           <ListCardFilm data={dataMoviesAvailable} />
         </div>
-        {/* <div className="now-showing">
-          <h1>
-            <span className="img-now-showing">
-              <img
-                alt="Now showing"
-                src="/images/advance_sale.png"
-                width="20"
-                height="20"
-              />
-            </span>
-            Đặt trước
-          </h1>
-          <ListCardFilm data={dataMoviesupComing}/>
-        </div> */}
         <div className="now-showing">
           <h1>
             <span className="img-now-showing">
@@ -80,26 +66,12 @@ function HomeLayout() {
           </h1>
           <ListCardFilm data={dataMoviesupComing} />
         </div>
-        <div className="now-showing">
-          <h1>
-            <span className="img-now-showing">
-              <img
-                alt="Now showing"
-                src="/images/tag.png"
-                width="23"
-                height="23"
-              />
-            </span>
-            Ưu đãi
-          </h1>
-          <ComingSoon />
-        </div>
       </div>
 
       <style jsx>{`
         .home {
           .home-main {
-            padding: 5%;
+            padding: 5% 12%;
             .now-showing {
               margin-bottom: 5%;
             }

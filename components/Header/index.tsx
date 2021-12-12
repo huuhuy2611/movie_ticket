@@ -4,6 +4,7 @@ import { Button, Col, Dropdown, Menu, Row } from 'antd';
 import { useRouter } from 'next/router';
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { IUser } from '@/common/interface/auth.interface';
+import style from './header.module.scss';
 
 function Header() {
   const router = useRouter();
@@ -39,8 +40,8 @@ function Header() {
         <Col>
           <Image
             src="/images/teatro_logo.png"
-            width={120}
-            height={32.72}
+            width={168}
+            height={45.8}
             alt="Logo"
             onClick={() => router.push('/movie')}
           />
@@ -85,10 +86,10 @@ function Header() {
 
         <div className="header-login">
           {dataUser?.name ? (
-            <div className="existed-user">
+            <div className={style.existedUser}>
               <Dropdown overlay={menu}>
-                <Button>
-                  Welcome, {dataUser?.name} <DownOutlined />
+                <Button className={style.customBtn}>
+                  Xin chào, {dataUser?.name} <DownOutlined />
                 </Button>
               </Dropdown>
             </div>
@@ -112,11 +113,14 @@ function Header() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 10%;
+          padding: 0 7%;
           &-tabs {
-            width: 50%;
+            width: 40vw;
             display: flex;
             justify-content: space-between;
+            @media (max-width: 1200px) {
+              width: 60vw;
+            }
             &-container {
               display: -webkit-box;
               align-items: center;

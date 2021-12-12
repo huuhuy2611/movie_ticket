@@ -10,6 +10,15 @@ function Movie() {
         position: 'relative',
       }}
     >
+      <div
+        style={{
+          backgroundImage: `url(${'/images/movie-details-bg.jpg'})`,
+          width: '100%',
+          height: '100%',
+          position: 'fixed',
+          zIndex: -1,
+        }}
+      />
       <HomeLayout />
     </div>
   );

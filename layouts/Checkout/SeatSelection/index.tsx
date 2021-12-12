@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select, Table } from 'antd';
 import LayoutSeat from '@/components/LayoutSeat';
 import { InfoTicket } from '..';
+import {
+  IDataMovie,
+  IDataCinemasByMovie,
+} from '@/common/interface/movie.interface';
+import { useRouter } from 'next/router';
+import { getDatesByMovie } from '@/services/movie.service';
 
 const { Option } = Select;
 
 interface IProps {
   infoTicket: InfoTicket;
   setInfoTicket: React.Dispatch<React.SetStateAction<InfoTicket>>;
+  dataCinema: IDataCinemasByMovie[];
+  dataMovie: IDataMovie;
+  dataDate: string[];
 }
 
 function SeatSelection(props: IProps) {
-  const { infoTicket, setInfoTicket } = props;
+  const { infoTicket, setInfoTicket, dataMovie, dataCinema, dataDate } = props;
+
+  const router = useRouter();
+
+  const idMovie = router.query.id;
+
+  const [optionDates, setOptionDates] = useState<string[]>([]);
 
   const dataSource = [
     {
@@ -62,35 +77,6 @@ function SeatSelection(props: IProps) {
 
   const [listSelected, setListSelected] = useState<string[]>([]);
 
-  const [optionsCinema, setOptionsCinema] = useState([
-    {
-      label: 'Cinema 1',
-      value: 'Cinema 1',
-    },
-    {
-      label: 'Cinema 2',
-      value: 'Cinema 2',
-    },
-    {
-      label: 'Cinema 3',
-      value: 'Cinema 3',
-    },
-  ]);
-
-  const [optionsDate, setOptionsDate] = useState([
-    {
-      label: '2020-11-11',
-      value: '2020-11-11',
-    },
-    {
-      label: '2020-12-12',
-      value: '2020-12-12',
-    },
-    {
-      label: '2020-10-10',
-      value: '2020-10-10',
-    },
-  ]);
   const [optionsTime, setOptionsTime] = useState([
     {
       label: '17:00',
@@ -106,9 +92,25 @@ function SeatSelection(props: IProps) {
     },
   ]);
 
+  const getDataDateByCinemaAndMovie = async (
+    cinema: string,
+    id_movie: string
+  ) => {
+    const res = (await getDatesByMovie(id_movie, { cinemaId: cinema })) as {
+      success: boolean;
+      data: string[];
+    };
+    if (res?.success) {
+      setOptionDates(res?.data);
+    }
+  };
+
   const handleSelectCinema = (cinema: string) => {
-    const tempInfo = { ...infoTicket, cinema };
-    setInfoTicket(tempInfo);
+    if (idMovie) {
+      const tempInfo = { ...infoTicket, cinema };
+      setInfoTicket(tempInfo);
+      getDataDateByCinemaAndMovie(cinema, idMovie as string);
+    }
   };
 
   const handleSelectDate = (date: string) => {
@@ -120,18 +122,24 @@ function SeatSelection(props: IProps) {
     setInfoTicket(tempInfo);
   };
 
+  useEffect(() => {
+    if (dataDate?.length > 0) {
+      setOptionDates(dataDate);
+    }
+  }, [dataDate]);
+
   return (
     <div className="seat-selection">
       <div className="seat-selection-select-fields mb-64">
         <Select
           value={infoTicket?.cinema || undefined}
           style={{ width: '30%' }}
-          placeholder="Select Cinema..."
+          placeholder="Chọn rạp..."
           onChange={(cinema: string) => handleSelectCinema(cinema)}
         >
-          {optionsCinema.map((cinema: { label: string; value: string }) => (
-            <Option key={cinema?.value} value={cinema?.value}>
-              {cinema?.label}
+          {dataCinema?.map((cinema: IDataCinemasByMovie) => (
+            <Option key={cinema?.id} value={cinema?.id}>
+              {cinema?.name}
             </Option>
           ))}
         </Select>
@@ -139,16 +147,17 @@ function SeatSelection(props: IProps) {
           value={infoTicket?.date || undefined}
           style={{ width: '30%' }}
           onChange={(date: string) => handleSelectDate(date)}
-          placeholder="Select Date..."
+          placeholder="Chọn ngày..."
         >
-          {optionsDate.map((date: { label: string; value: string }) => (
-            <Option value={date?.value}>{date?.label}</Option>
+          {optionDates.map((date) => (
+            <Option value={date}>{date}</Option>
           ))}
         </Select>
         <Select
+          disabled={!(infoTicket?.cinema && infoTicket?.date)}
           value={infoTicket?.time || undefined}
           style={{ width: '30%' }}
-          placeholder="Select Time..."
+          placeholder="Chọn suất chiếu..."
           onChange={(time: string) => handleSelectTime(time)}
         >
           {optionsTime.map((time: { label: string; value: string }) => (
@@ -159,7 +168,7 @@ function SeatSelection(props: IProps) {
       <div className="seat-selection-hr">
         <hr />
         <div className="div-center">
-          <h1 className="mb-16 seat-selection-name-cinema">SCREEN</h1>
+          <h1 className="mb-16 seat-selection-name-cinema">MÀN HÌNH</h1>
         </div>
       </div>
       <div className="seat-selection-layout-seat mb-64">
@@ -177,6 +186,7 @@ function SeatSelection(props: IProps) {
           &-name-cinema {
             font-size: 2rem;
             font-weight: 300;
+            z-index: 10;
           }
           &-select-fields {
             display: flex;
