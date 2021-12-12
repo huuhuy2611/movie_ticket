@@ -66,3 +66,27 @@ export const getDatesByMovie = async (idMovie: string, params?: any) => {
     return err;
   }
 };
+
+export const getSchedulesByMovie = async (idMovie: string, params?: any) => {
+  try {
+    let queryParams = '';
+    if (params) {
+      queryParams = getParams(params);
+    }
+    const res = await axios.get(
+      `${API_URL}/Movies/${idMovie}/schedules${queryParams}`
+    );
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getSeatsByRoom = async (roomId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/Cinemas/rooms/${roomId}`);
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};

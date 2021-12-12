@@ -1,15 +1,20 @@
+import { ISeat } from '@/common/interface/movie.interface';
 import { Col, Row } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './layoutSeat.module.scss';
 
 interface IProps {
-  listReserved: string[];
+  // listReserved: string[];
   listSelected: string[];
+  dataSeats: { [key: number]: ISeat[] };
+  vipPrice: number;
   setListSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 function LayoutSeat(props: IProps) {
-  const { listReserved, listSelected, setListSelected } = props;
+  const { dataSeats, vipPrice, setListSelected, listSelected } = props;
+
+  const [widthItem, setWidthItem] = useState(0);
 
   const handleSelectSeat = (locationSeat: string) => {
     const tempListSelected = listSelected;
@@ -23,85 +28,53 @@ function LayoutSeat(props: IProps) {
     setListSelected([...listSelected, locationSeat]);
   };
 
+  useEffect(() => {
+    const lengthSeats = [] as number[];
+    Object.keys(dataSeats).forEach((rowSeat) => {
+      const tempLengthRow = dataSeats[rowSeat as unknown as number]?.length;
+      lengthSeats.push(tempLengthRow);
+    });
+    setWidthItem(100 / (Math.max(...lengthSeats) + 1));
+  }, []);
+
   return (
     <div className="layout-seat">
-      <Row className="mb-32">
-        {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map((item: string) => (
-          <>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((subItem: number) => (
-              <>
-                {item === 'H' ? (
-                  <>
-                    {[3, 4, 9, 10].includes(subItem) ? (
-                      <>
-                        <Col span={2}>
-                          <div
-                            className={`
-                            ${styles.item} 
-                            ${
-                              listReserved.find(
-                                (reserved: string) =>
-                                  reserved === `${item}${subItem}`
-                              ) && styles.itemReserved
-                            }
-                            ${
-                              listSelected.find(
-                                (reserved: string) =>
-                                  reserved === `${item}${subItem}`
-                              ) && styles.itemSelected
-                            }
-                            `}
-                            role="button"
-                            tabIndex={0}
-                            onClick={() =>
-                              handleSelectSeat(`${item}${subItem}`)
-                            }
-                            onKeyDown={() => {}}
-                          >
-                            {item}
-                            {subItem}
-                          </div>
-                        </Col>
-                      </>
-                    ) : (
-                      <>
-                        <Col span={2} />
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Col span={2}>
-                      <div
-                        className={`
-                        ${styles.item}
-                        ${
-                          listReserved.find(
-                            (reserved: string) =>
-                              reserved === `${item}${subItem}`
-                          ) && `${styles.itemReserved}`
-                        }
-                        ${
-                          listSelected.find(
-                            (reserved: string) =>
-                              reserved === `${item}${subItem}`
-                          ) && styles.itemSelected
-                        }
-                        `}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleSelectSeat(`${item}${subItem}`)}
-                        onKeyDown={() => {}}
-                      >
-                        {item}
-                        {subItem}
-                      </div>
-                    </Col>
-                  </>
-                )}
-              </>
-            ))}
-          </>
+      <Row
+        className="mb-32"
+        style={{ flexDirection: 'column', alignItems: 'center' }}
+      >
+        {Object.keys(dataSeats)?.map((rowSeat) => (
+          <Row style={{ width: '100%' }}>
+            {dataSeats[rowSeat as unknown as number]?.map((seat) => {
+              return (
+                <>
+                  <Col
+                    style={{
+                      width: `${widthItem}%`,
+                    }}
+                  >
+                    <div
+                      className={`${styles.item} ${
+                        seat?.isReserved ? styles.itemReserved : ''
+                      } ${
+                        seat?.ticketPrice === vipPrice ? styles.itemVip : ''
+                      } ${
+                        listSelected.includes(seat?.code)
+                          ? styles.itemSelected
+                          : ''
+                      }`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => handleSelectSeat(seat?.code)}
+                      onKeyDown={() => {}}
+                    >
+                      {seat?.code}
+                    </div>
+                  </Col>
+                </>
+              );
+            })}
+          </Row>
         ))}
       </Row>
       <div className="layout-seat-note">

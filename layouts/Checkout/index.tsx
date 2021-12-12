@@ -15,7 +15,7 @@ const { Step } = Steps;
 export interface InfoTicket {
   cinema: string;
   date: string;
-  time: string;
+  roomId: string;
 }
 
 function CheckoutLayout() {
@@ -24,13 +24,10 @@ function CheckoutLayout() {
   const [infoTicket, setInfoTicket] = useState<InfoTicket>({
     cinema: '',
     date: '',
-    time: '',
+    roomId: '',
   });
   const [step, setStep] = useState(0);
   const [dataMovie, setDataMovie] = useState<IDataMovie>();
-  const [dataCinemas, setDataCinemas] = useState([]);
-  const [dataDate, setDataDate] = useState<string[]>([]);
-  const [dataTime, setDataTime] = useState([]);
 
   const getDataMovie = async (id: string) => {
     const res = await getMovieDetails(id);
@@ -40,28 +37,9 @@ function CheckoutLayout() {
     }
   };
 
-  const getDataCinemaByMovie = async (id: string) => {
-    const res = await getCinemasByMovie(id);
-    if (res?.foundItems) {
-      setDataCinemas(res?.foundItems);
-    }
-  };
-
-  const getDataDateByMovie = async (id: string) => {
-    const res = (await getDatesByMovie(id)) as {
-      success: boolean;
-      data: string[];
-    };
-    if (res?.success) {
-      setDataDate(res?.data);
-    }
-  };
-
   useEffect(() => {
     if (router.query.id) {
       getDataMovie(router.query.id as string);
-      getDataCinemaByMovie(router.query.id as string);
-      getDataDateByMovie(router.query.id as string);
     }
   }, [router.query]);
 
@@ -91,13 +69,7 @@ function CheckoutLayout() {
           </Steps>
         </div>
 
-        <SeatSelection
-          infoTicket={infoTicket}
-          setInfoTicket={setInfoTicket}
-          dataCinema={dataCinemas}
-          dataMovie={dataMovie as IDataMovie}
-          dataDate={dataDate}
-        />
+        <SeatSelection infoTicket={infoTicket} setInfoTicket={setInfoTicket} />
         <div className="prev-next-btn">
           {step > 0 && <Button>Prev</Button>}
           <Button>Next</Button>
