@@ -1,13 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ListCardFilm from '@/components/ListCardFilm';
 import Banner from './Components/Banner';
 import ComingSoon from './Components/ComingSoon';
-import { getListMovieAPI } from '@/services/movieService';
+import {
+  getListMoviesAvailable,
+  getListMoviesUpComing,
+} from '@/services/movie.service';
+import { IFoundItem } from '@/common/interface/movie.interface';
 
 function HomeLayout() {
+  const [dataMoviesAvailable, setDataMoviesAvailable] = useState<IFoundItem[]>(
+    []
+  );
+
+  const [dataMoviesupComing, setDataMoviesupComing] = useState<IFoundItem[]>(
+    []
+  );
+
+  const getDataMovies = async () => {
+    const resAvailable = await getListMoviesAvailable();
+    const resUpComing = await getListMoviesUpComing();
+    if (resAvailable?.foundItems) {
+      setDataMoviesAvailable(resAvailable?.foundItems);
+    }
+    if (resUpComing?.foundItems) {
+      setDataMoviesupComing(resUpComing?.foundItems);
+    }
+  };
+
   useEffect(() => {
-    const getListMovie = getListMovieAPI();
-    console.log('dasdasdasdsad', getListMovie);
+    getDataMovies();
   }, []);
 
   return (
@@ -28,9 +50,9 @@ function HomeLayout() {
             </span>
             Đang chiếu
           </h1>
-          <ListCardFilm />
+          <ListCardFilm data={dataMoviesAvailable} />
         </div>
-        <div className="now-showing">
+        {/* <div className="now-showing">
           <h1>
             <span className="img-now-showing">
               <img
@@ -42,8 +64,8 @@ function HomeLayout() {
             </span>
             Đặt trước
           </h1>
-          <ListCardFilm />
-        </div>
+          <ListCardFilm data={dataMoviesupComing}/>
+        </div> */}
         <div className="now-showing">
           <h1>
             <span className="img-now-showing">
@@ -56,7 +78,7 @@ function HomeLayout() {
             </span>
             Sắp chiếu
           </h1>
-          <ListCardFilm />
+          <ListCardFilm data={dataMoviesupComing} />
         </div>
         <div className="now-showing">
           <h1>

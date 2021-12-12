@@ -9,6 +9,7 @@ import {
   PlayCircleFilled,
 } from '@ant-design/icons';
 import { Modal } from 'antd';
+import ModalTrailer from '@/components/Modal/ModalTrailer';
 
 const mockDataBanner = [
   {
@@ -84,32 +85,7 @@ function Banner() {
         <CaretRightOutlined onClick={handleNext} />
       </div>
       {showTrailer && currentLink && (
-        <Modal
-          centered
-          visible={showTrailer}
-          width={1000}
-          footer={null}
-          onCancel={() => setShowTrailer(false)}
-          closeIcon={
-            <CloseOutlined
-              style={{
-                color: 'white',
-                fontSize: '20px',
-                position: 'absolute',
-                right: '0',
-                top: '0',
-              }}
-            />
-          }
-        >
-          <iframe
-            className="iframe-trailer"
-            title="trailer"
-            src={currentLink}
-            allowFullScreen
-            frameBorder="0"
-          />
-        </Modal>
+        <ModalTrailer setShowModal={setShowTrailer} linkTrailer={currentLink} />
       )}
 
       <style jsx>{`
@@ -149,15 +125,6 @@ function Banner() {
                 color: #ffffffad;
               }
             }
-          }
-        }
-
-        .iframe-trailer {
-          height: 80vh;
-          width: 100%;
-          border: 0;
-          .ytp-chrome-top-buttons {
-            display: none;
           }
         }
         :global(.slick-dots) {

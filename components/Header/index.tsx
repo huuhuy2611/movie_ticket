@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Dropdown, Menu, Row } from 'antd';
 import { useRouter } from 'next/router';
+import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { IUser } from '@/common/interface/auth.interface';
 
 function Header() {
   const router = useRouter();
+
+  const [dataUser, setDataUser] = useState<IUser>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    id: '',
+  });
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="2" icon={<UserOutlined />}>
+        Thông tin cá nhân
+      </Menu.Item>
+      <Menu.Item key="3" icon={<LogoutOutlined />} style={{ color: 'red' }}>
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
+
+  useEffect(() => {
+    const tempDataUser = localStorage.getItem('dataUser');
+    if (tempDataUser) {
+      setDataUser(JSON.parse(tempDataUser));
+    }
+  }, []);
 
   return (
     <div className="header">
@@ -57,19 +84,19 @@ function Header() {
         </div>
 
         <div className="header-login">
-          {/* <div>
-            <img
-              src="/images/shopping-cart.png"
-              width={25}
-              height={25}
-              alt="Cart"
-              className="mr-16"
-            />
-          </div> */}
-
-          <Button ghost onClick={() => router.push('/auth')}>
-            ĐĂNG KÝ/ĐĂNG NHẬP
-          </Button>
+          {dataUser?.name ? (
+            <div className="existed-user">
+              <Dropdown overlay={menu}>
+                <Button>
+                  Welcome, {dataUser?.name} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </div>
+          ) : (
+            <Button ghost onClick={() => router.push('/auth')}>
+              ĐĂNG KÝ/ĐĂNG NHẬP
+            </Button>
+          )}
         </div>
       </div>
       <style jsx>{`
@@ -121,6 +148,13 @@ function Header() {
         }
         :global(.ant-btn-background-ghost) {
           &:hover {
+            background-color: #fff !important;
+            color: #0b0b0b;
+          }
+        }
+        :global(.ant-btn) {
+          &:hover,
+          &:focus {
             background-color: #fff !important;
             color: #0b0b0b;
           }
