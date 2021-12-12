@@ -5,28 +5,39 @@ import { InfoTicket } from '..';
 import {
   IDataMovie,
   IDataCinemasByMovie,
+  IDataScheduleByMovie,
+  IDataGetSeats,
+  ISeat,
 } from '@/common/interface/movie.interface';
 import { useRouter } from 'next/router';
-import { getDatesByMovie } from '@/services/movie.service';
+import {
+  getCinemasByMovie,
+  getDatesByMovie,
+  getSchedulesByMovie,
+  getSeatsByRoom,
+} from '@/services/movie.service';
+import moment from 'moment';
+import { groupBy } from 'lodash';
 
 const { Option } = Select;
 
 interface IProps {
   infoTicket: InfoTicket;
   setInfoTicket: React.Dispatch<React.SetStateAction<InfoTicket>>;
-  dataCinema: IDataCinemasByMovie[];
-  dataMovie: IDataMovie;
-  dataDate: string[];
 }
 
 function SeatSelection(props: IProps) {
-  const { infoTicket, setInfoTicket, dataMovie, dataCinema, dataDate } = props;
+  const { infoTicket, setInfoTicket } = props;
 
   const router = useRouter();
 
   const idMovie = router.query.id;
 
+  const [optionCinemas, setOptionCinemas] = useState([]);
   const [optionDates, setOptionDates] = useState<string[]>([]);
+  const [optionTimes, setOptionTimes] = useState<IDataScheduleByMovie[]>([]);
+  const [vipPrice, setVipPrice] = useState<number>(0);
+  const [dataSeats, setDataSeats] = useState<{ [key: number]: ISeat[] }>();
 
   const dataSource = [
     {
@@ -77,20 +88,12 @@ function SeatSelection(props: IProps) {
 
   const [listSelected, setListSelected] = useState<string[]>([]);
 
-  const [optionsTime, setOptionsTime] = useState([
-    {
-      label: '17:00',
-      value: '17:00',
-    },
-    {
-      label: '19:00',
-      value: '19:00',
-    },
-    {
-      label: '21:00',
-      value: '21:00',
-    },
-  ]);
+  const getDataCinemaByMovie = async (id: string) => {
+    const res = await getCinemasByMovie(id);
+    if (res?.foundItems) {
+      setOptionCinemas(res?.foundItems);
+    }
+  };
 
   const getDataDateByCinemaAndMovie = async (
     cinema: string,
@@ -100,8 +103,37 @@ function SeatSelection(props: IProps) {
       success: boolean;
       data: string[];
     };
+
     if (res?.success) {
       setOptionDates(res?.data);
+    }
+  };
+
+  const getDataSchdulesByMovie = async (
+    id_movie: string,
+    cinemaId: string,
+    date: string
+  ) => {
+    const res = (await getSchedulesByMovie(id_movie, { cinemaId, date })) as {
+      foundItems: IDataScheduleByMovie[];
+    };
+
+    if (res?.foundItems) {
+      setOptionTimes(res?.foundItems);
+    }
+  };
+
+  const getDataSeatsByRoom = async (roomId: string) => {
+    const res = (await getSeatsByRoom(roomId)) as IDataGetSeats;
+    if (res?.seats) {
+      const groupSeats = groupBy(res?.seats, 'row') as unknown as {
+        [key: number]: ISeat[];
+      };
+      const listPrice = res?.seats?.map((seat) => seat?.ticketPrice);
+      const maxPrice = Math.max(...listPrice);
+      setVipPrice(maxPrice as number);
+      setDataSeats(groupSeats);
+      console.log('sea', res?.seats, groupSeats);
     }
   };
 
@@ -114,19 +146,26 @@ function SeatSelection(props: IProps) {
   };
 
   const handleSelectDate = (date: string) => {
-    const tempInfo = { ...infoTicket, date };
-    setInfoTicket(tempInfo);
+    if (idMovie && infoTicket?.cinema) {
+      const tempInfo = { ...infoTicket, date };
+      setInfoTicket(tempInfo);
+      getDataSchdulesByMovie(idMovie as string, infoTicket?.cinema, date);
+    }
   };
-  const handleSelectTime = (time: string) => {
-    const tempInfo = { ...infoTicket, time };
-    setInfoTicket(tempInfo);
+
+  const handleSelectTime = (roomId: string) => {
+    if (idMovie && infoTicket?.cinema && infoTicket?.date) {
+      const tempInfo = { ...infoTicket, roomId };
+      setInfoTicket(tempInfo);
+      getDataSeatsByRoom(roomId);
+    }
   };
 
   useEffect(() => {
-    if (dataDate?.length > 0) {
-      setOptionDates(dataDate);
+    if (idMovie) {
+      getDataCinemaByMovie(idMovie as string);
     }
-  }, [dataDate]);
+  }, [idMovie]);
 
   return (
     <div className="seat-selection">
@@ -137,7 +176,7 @@ function SeatSelection(props: IProps) {
           placeholder="Chọn rạp..."
           onChange={(cinema: string) => handleSelectCinema(cinema)}
         >
-          {dataCinema?.map((cinema: IDataCinemasByMovie) => (
+          {optionCinemas?.map((cinema: IDataCinemasByMovie) => (
             <Option key={cinema?.id} value={cinema?.id}>
               {cinema?.name}
             </Option>
@@ -150,18 +189,20 @@ function SeatSelection(props: IProps) {
           placeholder="Chọn ngày..."
         >
           {optionDates.map((date) => (
-            <Option value={date}>{date}</Option>
+            <Option value={date}>{moment(date).format('DD/MM/YYYY')}</Option>
           ))}
         </Select>
         <Select
           disabled={!(infoTicket?.cinema && infoTicket?.date)}
-          value={infoTicket?.time || undefined}
+          value={infoTicket?.roomId || undefined}
           style={{ width: '30%' }}
           placeholder="Chọn suất chiếu..."
           onChange={(time: string) => handleSelectTime(time)}
         >
-          {optionsTime.map((time: { label: string; value: string }) => (
-            <Option value={time?.value}>{time?.label}</Option>
+          {optionTimes.map((time) => (
+            <Option value={time?.roomId}>
+              {moment(time?.startTime).format('HH:mmA')}
+            </Option>
           ))}
         </Select>
       </div>
@@ -171,13 +212,17 @@ function SeatSelection(props: IProps) {
           <h1 className="mb-16 seat-selection-name-cinema">MÀN HÌNH</h1>
         </div>
       </div>
-      <div className="seat-selection-layout-seat mb-64">
-        <LayoutSeat
-          listReserved={listReserved}
-          listSelected={listSelected}
-          setListSelected={setListSelected}
-        />
-      </div>
+      {dataSeats && vipPrice && (
+        <div className="seat-selection-layout-seat mb-64">
+          <LayoutSeat
+            dataSeats={dataSeats as { [key: number]: ISeat[] }}
+            vipPrice={vipPrice}
+            listSelected={listSelected}
+            setListSelected={setListSelected}
+          />
+        </div>
+      )}
+
       <div>
         <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>
@@ -194,15 +239,14 @@ function SeatSelection(props: IProps) {
             justify-content: space-between;
           }
           &-hr {
-            width: 85%;
-            margin-left: 2.5%;
+            width: 100%;
             hr {
               height: 1px;
               background: #8a8686;
             }
           }
           &-layout-seat {
-            width: 90%;
+            width: 100%;
           }
         }
 

@@ -58,3 +58,35 @@ export interface IDataCinemasByMovie {
   rooms: any;
   id: string;
 }
+
+// movie schedule
+
+export interface ISeat {
+  ticketPrice: number;
+  code: string;
+  row: number;
+  isReserved: boolean;
+}
+
+export interface IDataGetSeats {
+  id: string;
+  name: string;
+  seats: ISeat[];
+}
+
+export interface IRoom {
+  id: string;
+  name: string;
+  seats: ISeat[];
+}
+
+export interface IDataScheduleByMovie {
+  roomId: string;
+  movieId: string;
+  startTime: Date;
+  endTime: Date;
+  notice: string;
+  room: IRoom;
+  movie: IDataMovie;
+  id: string;
+}
