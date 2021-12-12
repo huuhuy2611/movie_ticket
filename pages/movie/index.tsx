@@ -1,7 +1,8 @@
 import React from 'react';
 import HomeLayout from '@/layouts/Home';
-
+import { useTranslation } from 'react-i18next';
 function Movie() {
+  const {t} = useTranslation();
   return (
     <div
       style={{
@@ -20,6 +21,7 @@ function Movie() {
         }}
       />
       <HomeLayout />
+      {t("Adventure")}
     </div>
   );
 }
