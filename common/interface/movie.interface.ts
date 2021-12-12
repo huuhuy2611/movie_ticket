@@ -33,22 +33,28 @@ export interface IResponseGetListMovies {
 }
 
 // movie details
-export interface IData {
-  id: string;
-  temp_id: string;
+export interface IDataMovie {
   name: string;
-  release_date: string;
-  video_release_date: string;
-  imdb_link: string;
-  poster_link: string;
+  description: string;
+  posterUrl: string;
+  trailerUrl: string;
   tags: string[];
-  ratings: string;
-  running_time: number;
-  desc: string;
+  runningTime: string;
+  id: string;
 }
 
 export interface IResponseMoviceDetail {
   code: number;
   message: string;
-  data: IData;
+  data: IDataMovie;
+}
+
+// movie cinema
+
+export interface IDataCinemasByMovie {
+  name: string;
+  partnerId: string;
+  address: string;
+  rooms: any;
+  id: string;
 }

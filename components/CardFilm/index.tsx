@@ -84,7 +84,17 @@ function CardFilm(props: IProps) {
         <div className="mb-16 card-film-name">
           <span>{content?.name}</span>
         </div>
-        <Button type="primary" danger onClick={() => router.push('/checkout')}>
+        <div className="mb-16">
+          <span>{content.tags?.join(', ')}</span>
+        </div>
+        <div className="mb-16">
+          <span>Thời lượng: {content.runningTime}</span>
+        </div>
+        <Button
+          type="primary"
+          danger
+          onClick={() => router.push(`/checkout/${content?.id}`)}
+        >
           MUA VÉ NGAY
         </Button>
       </Card>
@@ -92,6 +102,7 @@ function CardFilm(props: IProps) {
         .card-film {
           width: 100%;
           text-align: center;
+          color: white !important;
           .trailer {
             position: fixed;
             top: 20vh;
@@ -103,7 +114,7 @@ function CardFilm(props: IProps) {
           &-img {
             position: relative;
             width: 100%;
-            height: 430px;
+            height: 350px;
             overflow: hidden;
             &:hover {
               .card-film-img-play {
@@ -125,6 +136,8 @@ function CardFilm(props: IProps) {
           &-name {
             min-height: 43px;
             color: #fff;
+            font-size: 17px;
+            font-weight: bold;
           }
         }
         :global(.ant-card-bordered) {

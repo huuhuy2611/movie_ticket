@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Steps } from 'antd';
+import { Button, Steps } from 'antd';
 import SeatSelection from './SeatSelection';
 import { useRouter } from 'next/router';
+import { IDataMovie } from '@/common/interface/movie.interface';
+import {
+  getCinemasByMovie,
+  getDatesByMovie,
+  getMovieDetails,
+} from '@/services/movie.service';
 
 const { Step } = Steps;
 
@@ -21,22 +27,60 @@ function CheckoutLayout() {
     time: '',
   });
   const [step, setStep] = useState(0);
+  const [dataMovie, setDataMovie] = useState<IDataMovie>();
+  const [dataCinemas, setDataCinemas] = useState([]);
+  const [dataDate, setDataDate] = useState<string[]>([]);
+  const [dataTime, setDataTime] = useState([]);
+
+  const getDataMovie = async (id: string) => {
+    const res = await getMovieDetails(id);
+
+    if (res?.success) {
+      setDataMovie(res);
+    }
+  };
+
+  const getDataCinemaByMovie = async (id: string) => {
+    const res = await getCinemasByMovie(id);
+    if (res?.foundItems) {
+      setDataCinemas(res?.foundItems);
+    }
+  };
+
+  const getDataDateByMovie = async (id: string) => {
+    const res = (await getDatesByMovie(id)) as {
+      success: boolean;
+      data: string[];
+    };
+    if (res?.success) {
+      setDataDate(res?.data);
+    }
+  };
 
   useEffect(() => {
     if (router.query.id) {
-      // call api schedule
+      getDataMovie(router.query.id as string);
+      getDataCinemaByMovie(router.query.id as string);
+      getDataDateByMovie(router.query.id as string);
     }
   }, [router.query]);
 
   return (
     <div className="checkout-layout">
       <div className="checkout-layout-left">
-        <Image
+        <img
           alt="example"
-          src="/images/test-2.jpg"
+          src={dataMovie?.posterUrl}
           width={298}
           height={440}
+          className="mb-16"
         />
+        <h1
+          className="mb-16 checkout-layout-right-name-cinema"
+          style={{ paddingLeft: '16px' }}
+        >
+          {dataMovie?.name}
+        </h1>
       </div>
       <div className="checkout-layout-right">
         <div className="mb-64">
@@ -46,11 +90,18 @@ function CheckoutLayout() {
             <Step title="Xác nhận" />
           </Steps>
         </div>
-        <h1 className="mb-16 checkout-layout-right-name-cinema">
-          Đại chiến Godzilla vs. Kong
-        </h1>
 
-        <SeatSelection infoTicket={infoTicket} setInfoTicket={setInfoTicket} />
+        <SeatSelection
+          infoTicket={infoTicket}
+          setInfoTicket={setInfoTicket}
+          dataCinema={dataCinemas}
+          dataMovie={dataMovie as IDataMovie}
+          dataDate={dataDate}
+        />
+        <div className="prev-next-btn">
+          {step > 0 && <Button>Prev</Button>}
+          <Button>Next</Button>
+        </div>
       </div>
 
       <style jsx>{`
@@ -60,6 +111,7 @@ function CheckoutLayout() {
           display: flex;
           &-left {
             width: 30%;
+            z-index: 1;
           }
           &-right {
             width: 70%;
@@ -67,6 +119,9 @@ function CheckoutLayout() {
               font-size: 2rem;
               font-weight: 300;
             }
+          }
+          .prev-next-btn {
+            z-index: 1;
           }
         }
 

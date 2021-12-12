@@ -36,8 +36,32 @@ export const getListMoviesUpComing = async (params?: IParamsGetListMovies) => {
 
 export const getMovieDetails = async (id: string) => {
   try {
-    const res = await axios.get(`${API_URL}/movie/${id}`);
-    return res?.data;
+    const res = await axios.get(`${API_URL}/Movies/${id}`);
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getCinemasByMovie = async (id: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/Movies/${id}/available-cinemas`);
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getDatesByMovie = async (idMovie: string, params?: any) => {
+  try {
+    let queryParams = '';
+    if (params) {
+      queryParams = getParams(params);
+    }
+    const res = await axios.get(
+      `${API_URL}/Movies/${idMovie}/available-dates${queryParams}`
+    );
+    return { data: [...res?.data], success: true };
   } catch (err) {
     return err;
   }
