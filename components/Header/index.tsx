@@ -5,10 +5,11 @@ import { useRouter } from 'next/router';
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { IUser } from '@/common/interface/auth.interface';
 import style from './header.module.scss';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
   const router = useRouter();
-
+  const {t} = useTranslation();
   const [dataUser, setDataUser] = useState<IUser>({
     name: '',
     email: '',
@@ -56,7 +57,7 @@ function Header() {
               role="button"
               tabIndex={0}
             >
-              Phim
+              {t('movie')}
               {router.pathname.includes('/movie') && <div className="line" />}
             </span>
           </div>

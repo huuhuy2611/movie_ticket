@@ -9,8 +9,10 @@ import { getMovieDetails } from '@/services/movie.service';
 import { useRouter } from 'next/router';
 import { GENRE_TYPE } from '@/common/constant/regex';
 import { convertUIRunningTime } from '@/common/ultils/common';
+import { useTranslation } from 'react-i18next';
 
 function MovieDetail() {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [dataMovieDetail, setDataMovieDetail] = useState<IDataMovie>();
@@ -65,7 +67,7 @@ function MovieDetail() {
                         className="button is-link is-small is-rounded is-inverted is-outlined"
                         href="/genre/vien-tuong"
                       >
-                        {GENRE_TYPE[`${tag}`]}
+                        {t(tag)}
                       </a>
                     </>
                   ))}

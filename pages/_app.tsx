@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Header from '@/components/Header';
+import '../i18n';
 
 const blacklist = ['/auth'];
 
