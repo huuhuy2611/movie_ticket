@@ -63,7 +63,6 @@ function CardFilm(props: IProps) {
         />
       )}
       <Card
-        hoverable
         cover={
           <div className="card-film-img">
             {imageURL?.src && (
@@ -81,15 +80,18 @@ function CardFilm(props: IProps) {
           </div>
         }
       >
-        <div className="mb-16 card-film-name">
-          <span>{content?.name}</span>
+        <div>
+          <div className="card-film-name content-item mb-8">
+            <span>{content?.name}</span>
+          </div>
+          <div className="mb-8 content-item">
+            <span>Thể loại: {content.tags?.join(', ')}</span>
+          </div>
+          <div className="mb-16 content-item">
+            <span>Thời lượng: {content.runningTimeInMinutes} phút</span>
+          </div>
         </div>
-        <div className="mb-16">
-          <span>{content.tags?.join(', ')}</span>
-        </div>
-        <div className="mb-16">
-          <span>Thời lượng: {content.runningTime}</span>
-        </div>
+
         <Button
           type="primary"
           danger
@@ -134,21 +136,37 @@ function CardFilm(props: IProps) {
             }
           }
           &-name {
-            min-height: 43px;
             color: #fff;
             font-size: 17px;
             font-weight: bold;
           }
+          .content-item {
+            color: #fff;
+            text-align: left;
+          }
         }
+        :global(.ant-card) {
+          background-color: unset;
+        }
+
         :global(.ant-card-bordered) {
           border: unset;
         }
         :global(.ant-card-cover, .ant-card-body) {
-          background-color: #0b0b0b;
+          background-color: unset;
         }
         :global(.ant-card-body) {
-          padding: 24px 12px;
+          padding: 24px;
         }
+
+        :global(.ant-btn-dangerous) {
+          &:hover {
+            color: #fff;
+            border-color: #ff4d4f;
+            background: #ff4d4f;
+          }
+        }
+
         .card-name {
           color: #fff;
           font-weight: 500;

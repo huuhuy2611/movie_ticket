@@ -16,7 +16,7 @@ export interface IFoundItem {
   posterUrl: string;
   trailerUrl: string;
   tags: string[];
-  runningTime: string;
+  runningTimeInMinutes: string;
   id: string;
 }
 
@@ -39,7 +39,7 @@ export interface IDataMovie {
   posterUrl: string;
   trailerUrl: string;
   tags: string[];
-  runningTime: string;
+  runningTimeInMinutes: string;
   id: string;
 }
 
@@ -88,5 +88,22 @@ export interface IDataScheduleByMovie {
   notice: string;
   room: IRoom;
   movie: IDataMovie;
+  id: string;
+}
+
+// review movie
+
+export interface ICustomer {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  id: string;
+}
+
+export interface IDataReview {
+  movie?: string;
+  customer: ICustomer;
+  comment: string;
+  stars: number;
   id: string;
 }

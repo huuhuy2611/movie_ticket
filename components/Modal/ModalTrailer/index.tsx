@@ -47,6 +47,9 @@ function ModalTrailer(props: IProps) {
             display: none;
           }
         }
+        :global(.ant-modal-body) {
+          padding: 0;
+        }
       `}</style>
     </div>
   );

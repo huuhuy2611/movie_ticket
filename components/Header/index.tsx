@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 function Header() {
   const router = useRouter();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [dataUser, setDataUser] = useState<IUser>({
     name: '',
     email: '',
@@ -17,12 +17,23 @@ function Header() {
     id: '',
   });
 
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('dataUser');
+    router.push('/auth');
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="2" icon={<UserOutlined />}>
         Thông tin cá nhân
       </Menu.Item>
-      <Menu.Item key="3" icon={<LogoutOutlined />} style={{ color: 'red' }}>
+      <Menu.Item
+        key="3"
+        icon={<LogoutOutlined />}
+        style={{ color: 'red' }}
+        onClick={handleLogOut}
+      >
         Đăng xuất
       </Menu.Item>
     </Menu>
@@ -72,7 +83,7 @@ function Header() {
               {router.pathname === '/cinemas' && <div className="line" />}
             </span>
           </div>
-          <div className="tab-detail">
+          {/* <div className="tab-detail">
             <span
               onClick={() => router.push('/promotions')}
               onKeyDown={() => {}}
@@ -82,7 +93,7 @@ function Header() {
               Ưu đãi
               {router.pathname === '/promotions' && <div className="line" />}
             </span>
-          </div>
+          </div> */}
         </div>
 
         <div className="header-login">
@@ -116,11 +127,11 @@ function Header() {
           justify-content: space-between;
           padding: 0 7%;
           &-tabs {
-            width: 40vw;
+            width: 30vw;
             display: flex;
             justify-content: space-between;
             @media (max-width: 1200px) {
-              width: 60vw;
+              width: 40vw;
             }
             &-container {
               display: -webkit-box;
@@ -160,7 +171,7 @@ function Header() {
         :global(.ant-btn) {
           &:hover,
           &:focus {
-            background-color: #fff !important;
+            background-color: #fff;
             color: #0b0b0b;
           }
         }
