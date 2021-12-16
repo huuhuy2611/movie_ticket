@@ -96,6 +96,7 @@ function CardFilm(props: IProps) {
           type="primary"
           danger
           onClick={() => router.push(`/checkout/${content?.id}`)}
+          // style={{ position: 'absolute', bottom: '-40px', left: '60px' }}
         >
           MUA VÉ NGAY
         </Button>
@@ -105,6 +106,7 @@ function CardFilm(props: IProps) {
           width: 100%;
           text-align: center;
           color: white !important;
+          position: relative;
           .trailer {
             position: fixed;
             top: 20vh;
