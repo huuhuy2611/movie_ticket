@@ -89,9 +89,17 @@ function Header() {
           {dataUser?.name ? (
             <div className={style.existedUser}>
               <Dropdown overlay={menu}>
-                <Button className={style.customBtn}>
+                <div
+                  className={style.customBtn}
+                  style={{
+                    color: 'white',
+                    fontSize: '22px',
+                    backgroundColor: 'transparent',
+                    borderColor: 'transparent',
+                  }}
+                >
                   Xin chào, {dataUser?.name} <DownOutlined />
-                </Button>
+                </div>
               </Dropdown>
             </div>
           ) : (

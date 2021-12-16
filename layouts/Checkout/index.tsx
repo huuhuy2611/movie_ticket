@@ -34,6 +34,7 @@ function CheckoutLayout() {
   const [step, setStep] = useState(0);
   const [dataMovie, setDataMovie] = useState<IDataMovie>();
   const [reservationId, setReservationId] = useState('');
+  const [vipPrice, setVipPrice] = useState(0);
 
   const getDataMovie = async (id: string) => {
     const res = await getMovieDetails(id);
@@ -127,6 +128,8 @@ function CheckoutLayout() {
               <SeatSelection
                 infoTicket={infoTicket}
                 setInfoTicket={setInfoTicket}
+                vipPrice={vipPrice}
+                setVipPrice={setVipPrice}
               />
             </>
           )}
@@ -136,9 +139,12 @@ function CheckoutLayout() {
               step={step}
               setStep={setStep}
               reservationId={reservationId}
+              vipPrice={vipPrice}
             />
           )}
-          {step === 2 && <Confirmation />}
+          {step === 2 && (
+            <Confirmation vipPrice={vipPrice} infoTicket={infoTicket} />
+          )}
         </div>
         <style jsx>{`
           .checkout-layout {

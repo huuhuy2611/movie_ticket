@@ -73,7 +73,7 @@ function HomeLayout() {
         <Select
           mode="multiple"
           allowClear
-          placeholder="Please select"
+          placeholder="Chọn thể loại..."
           onChange={handleSelectTag}
           style={{ width: '47%', marginRight: '16px' }}
         >
@@ -89,7 +89,14 @@ function HomeLayout() {
           placeholder="One Piece"
           onChange={handleChangeSearchName}
         ></Input>
-        <Button onClick={handleSearch}>Search</Button>
+        <Button
+          danger
+          type="primary"
+          style={{ fontWeight: 'bold' }}
+          onClick={handleSearch}
+        >
+          Search
+        </Button>
       </div>
       <div className="home-main">
         {dataMoviesSearch?.length > 0 && (
