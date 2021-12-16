@@ -29,8 +29,8 @@ function HomeLayout() {
   });
 
   const getDataMovies = async () => {
-    const resAvailable = await getListMoviesAvailable();
-    const resUpComing = await getListMoviesUpComing();
+    const resAvailable = await getListMoviesAvailable({ Limit: 8 });
+    const resUpComing = await getListMoviesUpComing({ Limit: 8 });
     if (resAvailable?.foundItems) {
       setDataMoviesAvailable(resAvailable?.foundItems);
     }

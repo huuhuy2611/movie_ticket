@@ -13,7 +13,6 @@ interface IProps {
 function Payment(props: IProps) {
   const { infoTicket, step, setStep, reservationId } = props;
 
-  const [expirationTime, setExprirationTime] = useState<any>(new Date());
   const [dataUser, setDataUser] = useState<any>();
   const [dataCard, setDataCard] = useState<any>({
     cardNumber: '',

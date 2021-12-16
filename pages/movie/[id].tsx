@@ -1,25 +1,38 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 import React, { useEffect, useState } from 'react';
+import { IDataMovie, IDataReview } from '@/common/interface/movie.interface';
 import {
-  IDataMovie,
-  IDataReview,
-  IResponseMoviceDetail,
-} from '@/common/interface/movie.interface';
-import { getMovieDetails, getReviewByMovie } from '@/services/movie.service';
+  getListMoviesSimilar,
+  getMovieDetails,
+  getReviewByMovie,
+  postReviewByMovie,
+} from '@/services/movie.service';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { Button, Row } from 'antd';
+import { Button, Input, Row } from 'antd';
 import ModalTrailer from '@/components/Modal/ModalTrailer';
+import { StarOutlined } from '@ant-design/icons';
 
 function MovieDetail() {
   const { t } = useTranslation();
   const router = useRouter();
 
+  const [dataMovieSimilar, setDataMovieSimilar] = useState<IDataMovie[]>([]);
   const [dataMovieDetail, setDataMovieDetail] = useState<IDataMovie>();
   const [dataReviews, setDataReviews] = useState<IDataReview[]>([]);
   const [showModalTrailer, setShowModalTrailer] = useState(false);
   const [dataTrailer, setDatatrailer] = useState('');
+  const [dataUser, setDataUser] = useState();
+  const [dataComment, setDataComment] = useState('');
+  const [star, setStar] = useState(0);
+
+  const getDataSimilarMovies = async (id: string) => {
+    const res = (await getListMoviesSimilar(id)) as any;
+    if (res?.success) {
+      setDataMovieSimilar(res?.data.filter((item: any) => item?.posterUrl));
+    }
+  };
 
   const getDataDetails = async (id: string) => {
     const res = await getMovieDetails(id);
@@ -40,8 +53,36 @@ function MovieDetail() {
     setDatatrailer(trailer);
   };
 
+  const handleChangeComment = (e: any) => {
+    setDataComment(e.target.value);
+  };
+
+  const handleCreateReview = async () => {
+    const postDataReview = {
+      comment: dataComment,
+      stars: star,
+    };
+    const res = await postReviewByMovie(
+      router.query.id as string,
+      postDataReview
+    );
+    if (res?.success) {
+      getDataReviewsByMovie(router.query.id as string);
+      setDataComment('');
+      setStar(0);
+    }
+  };
+
+  useEffect(() => {
+    const tempDataUser = localStorage.getItem('dataUser');
+    if (tempDataUser) {
+      setDataUser(JSON.parse(tempDataUser));
+    }
+  }, []);
+
   useEffect(() => {
     if (router.query.id) {
+      getDataSimilarMovies(router.query.id as string);
       getDataDetails(router.query.id as string);
       getDataReviewsByMovie(router.query.id as string);
     }
@@ -115,6 +156,27 @@ function MovieDetail() {
                   Xem Trailer
                 </Button>
               </div>
+              {dataMovieSimilar?.length > 0 && (
+                <div className="imgs-similar">
+                  <p>Phim tương tự</p>
+                  <div className="content">
+                    {dataMovieSimilar.slice(0, 4)?.map((movie) => (
+                      <>
+                        <img
+                          alt="movie"
+                          width="200"
+                          className="img-item"
+                          src={movie?.posterUrl}
+                          onClick={() => {
+                            setDataMovieSimilar([]);
+                            router.push(`/movie/${movie?.id}`);
+                          }}
+                        />
+                      </>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -122,6 +184,61 @@ function MovieDetail() {
       {dataReviews?.length > 0 && (
         <div className="review">
           <div className="title">Đánh giá của người xem</div>
+          {dataUser && (
+            <>
+              <Input
+                placeholder="Viết bình luận"
+                onChange={handleChangeComment}
+                value={dataComment}
+              ></Input>
+              <Row>
+                <Button
+                  onClick={handleCreateReview}
+                  type="primary"
+                  style={{ margin: '16px 0 32px' }}
+                >
+                  Bình luận
+                </Button>
+                <div style={{ margin: '15px 30px' }}>
+                  <StarOutlined
+                    style={{
+                      color: `${star >= 1 ? 'yellow' : 'unset'}`,
+                      fontSize: '30px',
+                    }}
+                    onClick={() => setStar(1)}
+                  />
+                  <StarOutlined
+                    style={{
+                      color: `${star >= 2 ? 'yellow' : 'unset'}`,
+                      fontSize: '30px',
+                    }}
+                    onClick={() => setStar(2)}
+                  />
+                  <StarOutlined
+                    style={{
+                      color: `${star >= 3 ? 'yellow' : 'unset'}`,
+                      fontSize: '30px',
+                    }}
+                    onClick={() => setStar(3)}
+                  />
+                  <StarOutlined
+                    style={{
+                      color: `${star >= 4 ? 'yellow' : 'unset'}`,
+                      fontSize: '30px',
+                    }}
+                    onClick={() => setStar(4)}
+                  />
+                  <StarOutlined
+                    style={{
+                      color: `${star >= 5 ? 'yellow' : 'unset'}`,
+                      fontSize: '30px',
+                    }}
+                    onClick={() => setStar(5)}
+                  />
+                </div>
+              </Row>
+            </>
+          )}
           <div className="content">
             {dataReviews?.map((review) => (
               <>
@@ -137,7 +254,19 @@ function MovieDetail() {
                   </Row>
 
                   <div className="ml-5">
-                    <div className="user-name">{review?.customer?.name}</div>
+                    <div className="user-name">
+                      {review?.customer?.name}
+                      <span style={{ position: 'relative', marginLeft: '8px' }}>
+                        {Array.from('x'.repeat(review?.stars)).map(() => (
+                          <StarOutlined
+                            style={{
+                              color: `yellow`,
+                              fontSize: '15px',
+                            }}
+                          />
+                        ))}
+                      </span>
+                    </div>
                     <div className="comment">{review?.comment}</div>
                   </div>
                 </Row>
@@ -149,6 +278,17 @@ function MovieDetail() {
 
       <style jsx>
         {`
+          .imgs-similar {
+            padding: 20px 0;
+            width: 100%;
+            p {
+              font-size: 20px;
+            }
+            .content {
+              display: flex;
+              justify-content: space-between;
+            }
+          }
           .movie-detail {
             color: white;
           }
@@ -166,7 +306,7 @@ function MovieDetail() {
                 font-style: italic;
               }
               .comment {
-                width: 90%;
+                width: 100%;
                 color: #b5b5b5;
               }
             }
