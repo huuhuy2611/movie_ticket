@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button, Col, Dropdown, Input, Menu, Row } from 'antd';
 import { useRouter } from 'next/router';
-import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  HistoryOutlined,
+  LogoutOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { IUser } from '@/common/interface/auth.interface';
 import style from './header.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -23,10 +28,17 @@ function Header() {
     router.push('/auth');
   };
 
+  const handleShowHistory = () => {
+    router.push(`/history`);
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="2" icon={<UserOutlined />}>
         Thông tin cá nhân
+      </Menu.Item>
+      <Menu.Item key="2" icon={<HistoryOutlined />} onClick={handleShowHistory}>
+        Lịch sử
       </Menu.Item>
       <Menu.Item
         key="3"
