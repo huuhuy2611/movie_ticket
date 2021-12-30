@@ -1,10 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Dropdown, Input, Menu, Row } from 'antd';
 import { useRouter } from 'next/router';
+import {
+  DownOutlined,
+  HistoryOutlined,
+  LogoutOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { IUser } from '@/common/interface/auth.interface';
+import style from './header.module.scss';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
   const router = useRouter();
+  const { t } = useTranslation();
+  const [dataUser, setDataUser] = useState<IUser>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    id: '',
+  });
+
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('dataUser');
+    router.push('/auth');
+  };
+
+  const handleShowHistory = () => {
+    router.push(`/history`);
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="2" icon={<UserOutlined />}>
+        Thông tin cá nhân
+      </Menu.Item>
+      <Menu.Item key="2" icon={<HistoryOutlined />} onClick={handleShowHistory}>
+        Lịch sử
+      </Menu.Item>
+      <Menu.Item
+        key="3"
+        icon={<LogoutOutlined />}
+        style={{ color: 'red' }}
+        onClick={handleLogOut}
+      >
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
+
+  useEffect(() => {
+    const tempDataUser = localStorage.getItem('dataUser');
+    if (tempDataUser) {
+      setDataUser(JSON.parse(tempDataUser));
+    }
+  }, []);
 
   return (
     <div className="header">
@@ -12,15 +64,15 @@ function Header() {
         <Col>
           <Image
             src="/images/teatro_logo.png"
-            width={120}
-            height={32.72}
+            width={168}
+            height={45.8}
             alt="Logo"
             onClick={() => router.push('/movie')}
           />
         </Col>
       </Row>
       <div className="header-tabs">
-        <div className="header-tabs-container">
+        {/* <div className="header-tabs-container">
           <div className="tab-detail">
             <span
               onClick={() => router.push('/movie')}
@@ -28,7 +80,7 @@ function Header() {
               role="button"
               tabIndex={0}
             >
-              Phim
+              {t('movie')}
               {router.pathname.includes('/movie') && <div className="line" />}
             </span>
           </div>
@@ -43,33 +95,30 @@ function Header() {
               {router.pathname === '/cinemas' && <div className="line" />}
             </span>
           </div>
-          <div className="tab-detail">
-            <span
-              onClick={() => router.push('/promotions')}
-              onKeyDown={() => {}}
-              role="button"
-              tabIndex={0}
-            >
-              Ưu đãi
-              {router.pathname === '/promotions' && <div className="line" />}
-            </span>
-          </div>
-        </div>
+        </div> */}
 
         <div className="header-login">
-          <div>
-            <img
-              src="/images/shopping-cart.png"
-              width={25}
-              height={25}
-              alt="Cart"
-              className="mr-16"
-            />
-          </div>
-
-          <Button ghost onClick={() => router.push('/login')}>
-            ĐĂNG KÝ/ĐĂNG NHẬP
-          </Button>
+          {dataUser?.name ? (
+            <div className={style.existedUser}>
+              <Dropdown overlay={menu}>
+                <div
+                  className={style.customBtn}
+                  style={{
+                    color: 'white',
+                    fontSize: '22px',
+                    backgroundColor: 'transparent',
+                    borderColor: 'transparent',
+                  }}
+                >
+                  Xin chào, {dataUser?.name} <DownOutlined />
+                </div>
+              </Dropdown>
+            </div>
+          ) : (
+            <Button ghost onClick={() => router.push('/auth')}>
+              ĐĂNG KÝ/ĐĂNG NHẬP
+            </Button>
+          )}
         </div>
       </div>
       <style jsx>{`
@@ -85,11 +134,11 @@ function Header() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 10%;
+          padding: 0 7%;
           &-tabs {
-            width: 50%;
             display: flex;
             justify-content: space-between;
+
             &-container {
               display: -webkit-box;
               align-items: center;
@@ -122,6 +171,13 @@ function Header() {
         :global(.ant-btn-background-ghost) {
           &:hover {
             background-color: #fff !important;
+            color: #0b0b0b;
+          }
+        }
+        :global(.ant-btn) {
+          &:hover,
+          &:focus {
+            background-color: #fff;
             color: #0b0b0b;
           }
         }
