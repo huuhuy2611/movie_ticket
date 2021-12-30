@@ -124,3 +124,17 @@ export const postReviewByMovie = async (movieId: string, data: any) => {
     return err;
   }
 };
+
+export const getHistoryBuyTicket = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${API_URL}/Reservations`, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    return { ...res?.data, success: true };
+  } catch (err) {
+    return err;
+  }
+};
